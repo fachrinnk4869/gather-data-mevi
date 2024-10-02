@@ -1,0 +1,22 @@
+services:
+  zed-camera:
+    container_name: zed_jetson_camera_2
+    build: .
+    runtime: nvidia
+    privileged: true  # Give the container full access to host devices
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,video,utility
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - QT_XCB_GL_INTEGRATION=xcb_egl
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix  # For X11 forwarding
+      - .:/app
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/video0:/dev/video0
+      - /dev/bus/usb:/dev/bus/usb  # Allow USB access
+    network_mode: host  # Use host network
+    stdin_open: true  # Keep the container open (interactive)
+    tty: true  # Allocate a pseudo-TTY to keep it running

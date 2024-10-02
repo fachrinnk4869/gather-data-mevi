@@ -1,0 +1,21 @@
+DWAPlannerROS:
+  # General Parameters
+  sim_time: 1.5  # Time to simulate for the dynamic window
+  vx_samples: 20  # Number of velocity samples in x
+  vtheta_samples: 40  # Number of angular velocity samples
+  escape_clearance: 0.0  # Clearance for escaping from local minima
+
+  # Cost Parameters
+  path_distance_bias: 32.0  # Weight of the path distance in cost function
+  goal_distance_bias: 24.0  # Weight of the goal distance in cost function
+  occdist_scale: 0.01  # Weight of the obstacle distance in cost function
+
+  # Dynamic Window Parameters
+  acc_lim_x: 1.0  # Maximum acceleration in x direction
+  acc_lim_y: 0.0  # Maximum acceleration in y direction
+  acc_lim_theta: 2.0  # Maximum angular acceleration
+
+  # Goal Tolerance
+  xy_goal_tolerance: 0.1
+  yaw_goal_tolerance: 0.1
+

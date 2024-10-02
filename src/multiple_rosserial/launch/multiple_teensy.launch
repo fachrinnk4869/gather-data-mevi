@@ -1,0 +1,14 @@
+<launch>
+  <!-- Teensy 1 -->
+  <node name="teensy_1" pkg="rosserial_python" type="serial_node.py" output="screen">
+    <param name="port" value="/dev/ttyACM0"/>
+    <param name="baud" value="57600"/>
+  </node>
+
+  <!-- Teensy 2 -->
+  <node name="teensy_2" pkg="rosserial_python" type="serial_node.py" output="screen">
+    <param name="port" value="/dev/ttyACM1"/>
+    <param name="baud" value="57600"/>
+  </node>
+</launch>
+

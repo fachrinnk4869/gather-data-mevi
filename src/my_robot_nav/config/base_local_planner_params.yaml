@@ -1,0 +1,26 @@
+base_local_planner: "dwa_local_planner/DWAPlannerROS"
+
+# DWA parameters
+max_vel_x: 0.5  # Maximum linear velocity
+min_vel_x: 0.1  # Minimum linear velocity
+max_vel_y: 0.0  # Maximum lateral velocity
+min_vel_y: 0.0  # Minimum lateral velocity
+max_rotational_vel: 1.0  # Maximum angular velocity
+min_rotational_vel: 0.0  # Minimum angular velocity
+
+# Goal Tolerance
+xy_goal_tolerance: 0.1  # Tolerance in the x and y directions
+yaw_goal_tolerance: 0.1  # Tolerance in the yaw direction
+
+# Dynamic Window Parameters
+acc_lim_x: 1.0  # Maximum acceleration in x direction
+acc_lim_y: 0.0  # Maximum acceleration in y direction
+acc_lim_theta: 2.0  # Maximum angular acceleration
+sim_time: 1.5  # Time to simulate for the dynamic window
+vth: 0.1  # Minimum velocity threshold
+
+# Cost Functions
+path_distance_bias: 32.0  # Weight of the path distance in cost function
+goal_distance_bias: 24.0  # Weight of the goal distance in cost function
+occdist_scale: 0.01  # Weight of the obstacle distance in cost function
+
