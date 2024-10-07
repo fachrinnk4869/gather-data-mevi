@@ -1,0 +1,11 @@
+<launch>
+    <!-- Node untuk move_base -->
+    <node pkg="move_base" type="move_base" name="move_base" output="screen">
+        <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+        <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
+        <rosparam file="$(find navigation_pkg)/config/costmap_common_params.yaml" command="load"/>
+        <rosparam file="$(find navigation_pkg)/config/local_costmap_params.yaml" command="load"/>
+        <rosparam file="$(find navigation_pkg)/config/global_costmap_params.yaml" command="load"/>
+        <rosparam file="$(find navigation_pkg)/config/dwa_local_planner_params.yaml" command="load"/>
+    </node>
+</launch>

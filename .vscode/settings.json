@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./src/gather_data/src/gather_data"
+    ]
+}

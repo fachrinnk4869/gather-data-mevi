@@ -1,0 +1,4 @@
+Symlinking /app/devel/share/tf2/cmake/tf2Config-version.cmake
+Symlinking /app/devel/share/tf2/cmake/tf2Config.cmake
+Symlinking /app/devel/lib/libtf2.so
+Symlinking /app/devel/lib/pkgconfig/tf2.pc

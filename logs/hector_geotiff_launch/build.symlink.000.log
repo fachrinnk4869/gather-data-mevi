@@ -1,0 +1,3 @@
+Symlinking /app/devel/share/hector_geotiff_launch/cmake/hector_geotiff_launchConfig.cmake
+Symlinking /app/devel/share/hector_geotiff_launch/cmake/hector_geotiff_launchConfig-version.cmake
+Symlinking /app/devel/lib/pkgconfig/hector_geotiff_launch.pc

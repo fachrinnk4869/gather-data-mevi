@@ -1,0 +1,3 @@
+Symlinking /app/devel/share/velodyne_pcl/cmake/velodyne_pclConfig.cmake
+Symlinking /app/devel/share/velodyne_pcl/cmake/velodyne_pclConfig-version.cmake
+Symlinking /app/devel/lib/pkgconfig/velodyne_pcl.pc

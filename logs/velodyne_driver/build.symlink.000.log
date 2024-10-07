@@ -1,0 +1,13 @@
+Symlinking /app/devel/include/velodyne_driver/VelodyneNodeConfig.h
+Symlinking /app/devel/share/velodyne_driver/docs/VelodyneNodeConfig.dox
+Symlinking /app/devel/share/velodyne_driver/docs/VelodyneNodeConfig.wikidoc
+Symlinking /app/devel/share/velodyne_driver/docs/VelodyneNodeConfig-usage.dox
+Symlinking /app/devel/share/velodyne_driver/cmake/velodyne_driverConfig-version.cmake
+Symlinking /app/devel/share/velodyne_driver/cmake/velodyne_driverConfig.cmake
+Symlinking /app/devel/lib/libdriver_nodelet.so
+Symlinking /app/devel/lib/libvelodyne_input.so
+Symlinking /app/devel/lib/python3/dist-packages/velodyne_driver/__init__.py
+Symlinking /app/devel/lib/python3/dist-packages/velodyne_driver/cfg/__init__.py
+Symlinking /app/devel/lib/python3/dist-packages/velodyne_driver/cfg/VelodyneNodeConfig.py
+Symlinking /app/devel/lib/pkgconfig/velodyne_driver.pc
+Symlinking /app/devel/lib/velodyne_driver/velodyne_node

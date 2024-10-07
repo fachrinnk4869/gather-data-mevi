@@ -22,7 +22,7 @@ RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E
 RUN apt-get update && apt-get install -y ros-noetic-desktop-full
 
 # Install ROS dependencies for Python
-RUN pip3 install rospkg catkin_pkg
+RUN pip3 install rospkg catkin_pkg pypcd
 
 # Install ZED ROS Wrapper (for communicating ZED with ROS)
 RUN apt-get update && apt-get install -y \
@@ -33,4 +33,4 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-message-filters
 
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
-RUN apt-get install -y ros-noetic-rosserial libsdl-image1.2-dev ros-noetic-move-base libqt5serialport5-dev libpcap-dev
+RUN apt-get install -y ros-noetic-rosserial libsdl-image1.2-dev ros-noetic-move-base libqt5serialport5-dev libpcap-dev python3-catkin-tools

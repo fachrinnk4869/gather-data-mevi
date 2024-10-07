@@ -1,0 +1,5 @@
+velodyne_driver/src/velodyne_pcl
+/app/devel/.private/velodyne_pcl/cmake.lock /app/devel/./cmake.lock
+/app/devel/.private/velodyne_pcl/share/velodyne_pcl/cmake/velodyne_pclConfig.cmake /app/devel/share/velodyne_pcl/cmake/velodyne_pclConfig.cmake
+/app/devel/.private/velodyne_pcl/share/velodyne_pcl/cmake/velodyne_pclConfig-version.cmake /app/devel/share/velodyne_pcl/cmake/velodyne_pclConfig-version.cmake
+/app/devel/.private/velodyne_pcl/lib/pkgconfig/velodyne_pcl.pc /app/devel/lib/pkgconfig/velodyne_pcl.pc

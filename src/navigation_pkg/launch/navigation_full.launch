@@ -1,0 +1,11 @@
+<launch>
+    <!-- Launch move_base DWA -->
+    <include file="$(find navigation_pkg)/launch/move_base_dwa.launch"/>
+
+    <!-- Launch AMCL -->
+    <include file="$(find navigation_pkg)/launch/amcl.launch"/>
+
+    <!-- Node Velodyne LIDAR -->
+    <node pkg="velodyne_driver" type="velodyne_nodelet_manager" name="velodyne_nodelet_manager" output="screen"/>
+    <node pkg="velodyne_pointcloud" type="cloud_nodelet" name="velodyne_cloud" output="screen" args="nodelet manager velodyne_nodelet_manager"/>
+</launch>

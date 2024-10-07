@@ -1,0 +1,5 @@
+navigation/nav_core
+/app/devel/.private/nav_core/cmake.lock /app/devel/./cmake.lock
+/app/devel/.private/nav_core/share/nav_core/cmake/nav_coreConfig-version.cmake /app/devel/share/nav_core/cmake/nav_coreConfig-version.cmake
+/app/devel/.private/nav_core/share/nav_core/cmake/nav_coreConfig.cmake /app/devel/share/nav_core/cmake/nav_coreConfig.cmake
+/app/devel/.private/nav_core/lib/pkgconfig/nav_core.pc /app/devel/lib/pkgconfig/nav_core.pc

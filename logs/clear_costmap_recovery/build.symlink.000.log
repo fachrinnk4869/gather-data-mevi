@@ -1,0 +1,4 @@
+Symlinking /app/devel/share/clear_costmap_recovery/cmake/clear_costmap_recoveryConfig-version.cmake
+Symlinking /app/devel/share/clear_costmap_recovery/cmake/clear_costmap_recoveryConfig.cmake
+Symlinking /app/devel/lib/libclear_costmap_recovery.so
+Symlinking /app/devel/lib/pkgconfig/clear_costmap_recovery.pc

@@ -1,0 +1,3 @@
+[ 16%] Built target velodyne_laserscan_gencfg
+[ 66%] Built target velodyne_laserscan
+[100%] Built target velodyne_laserscan_node

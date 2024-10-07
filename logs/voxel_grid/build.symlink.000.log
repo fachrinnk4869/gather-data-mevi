@@ -1,0 +1,4 @@
+Symlinking /app/devel/share/voxel_grid/cmake/voxel_gridConfig.cmake
+Symlinking /app/devel/share/voxel_grid/cmake/voxel_gridConfig-version.cmake
+Symlinking /app/devel/lib/libvoxel_grid.so
+Symlinking /app/devel/lib/pkgconfig/voxel_grid.pc

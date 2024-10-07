@@ -1,52 +1,34 @@
 <launch>
-<!-- Adaptive Monte Carlos Localization (AMCL) node: Subscribe to topics for localization  -->
-<node name="amcl" pkg="amcl" type="amcl" output="screen">
+  <!-- Map Server Node -->
+  <node name="map_server" pkg="map_server" type="map_server" output="screen" args="$(find my_robot_nav)/maps/map.yaml" />
+
+  <!-- Static Transform Publisher for Velodyne -->
+  <node pkg="tf" type="static_transform_publisher" name="base_to_velodyne" 
+        args="0 0 0 0 0 0 base_link velodyne 100" />
+ 
+  <node pkg="tf" type="static_transform_publisher" name="base_to_odom" 
+      args="0 0 0 0 0 0 base_link odom 100" />
+
+  <!-- Static Transform Publisher from odom to map -->
+  <node pkg="tf" type="static_transform_publisher" name="odom_to_map" 
+        args="0 0 0 0 0 0 odom map 100" />
+  <!-- Adaptive Monte Carlos Localization (AMCL) node -->
+  <node name="amcl" pkg="amcl" type="amcl" output="screen">
     <remap from="scan" to="/scan_filtered"/>
-    <param name="base_frame_id" value="base_link"/>
-    <param name="odom_frame_id" value="odom"/>
-    <param name="global_frame_id" value="map"/>
+    <param name="odom_frame_id" value="odom" />
+    <param name="base_frame_id" value="base_link" />
+    <param name="global_frame_id" value="map" />
 
-    <!-- If you choose to define initial pose here -->
-    <param name="initial_pose_x" value="0"/>      <!--Center of Map-->
-    <param name="initial_pose_y" value="0"/>      <!--Center of Map-->
-    <param name="initial_pose_a" value="0"/>      <!--Center of Map-->
-    <param name="initial_cov_xx" value="0.05*0.05"/>
-    <param name="initial_cov_yy" value="0.05*0.05"/>
-    <param name="initial_cov_aa" value="(3.14/192)*(3.14/192)"/>
-     <!--<param name="initial_cov_xx" value="0.25*0.25"/>      -->
-     <!--<param name="initial_cov_yy" value="0.25*0.25"/>      -->
-     <!--<param name="initial_cov_aa" value="(3.14/24)*(3.14/24)"/>       -->
-
-    <!-- Limits on particles used in AMCL -->
-    <param name="min_particles" value="50"/>
-    <param name="max_particles" value="1000"/>
-
-    <!-- AMCL Update Rate (d = translational, a = rotational) -->
-    <param name="update_min_d" value="0.001"/>
-    <param name="update_min_a" value="0.001"/>
-    <!-- <param name="update_min_d" value="0.01"/> -->
-    <!-- <param name="update_min_a" value="0.01"/> -->
-
-    <!-- Laser settings -->
-    <param name="laser_min_range" value="-1.0"/>        <!-- Use LaserScan Msg's min range -->
-    <param name="laser_max_range" value="-1.0"/>        <!-- Use LaserScan Msg's max range -->
-    <param name="laser_min_beams" value="30"/>
-    <param name="laser_z_hit" value="0.95"/>
-    <param name="laser_z_rand" value="0.05"/>
-    <param name="laser_model_type" value="likelihood_field"/>
-
-    <!-- Odometry Settings - alpha = noise error (Assume ~0.5cm error) -->
-    <param name="odom_model_type" value="diff-corrected"/>
-    <param name="odom_alpha1" value="0.005"/>
-    <param name="odom_alpha2" value="0.005"/>
-    <param name="odom_alpha3" value="0.005"/>
-    <param name="odom_alpha4" value="0.005"/>
+    <!-- Load AMCL parameters from YAML file -->
+    <rosparam file="$(find my_robot_nav)/config/amcl_params.yaml" command="load"/>
   </node>
 
-<!-- Move Base Node -->
-   <node pkg="move_base" type="move_base" name="move_base" output="screen">
+  <!-- Move Base Node -->
+  <node pkg="move_base" type="move_base" name="move_base" output="screen">
     <param name="base_global_planner" value="navfn/NavfnROS" />
     <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+    <param name="global_frame_id" value="map" />
+    <param name="robot_base_frame" value="base_link" />
 
     <!-- Load global costmap parameters -->
     <rosparam file="$(find my_robot_nav)/config/global_costmap_params.yaml" command="load" ns="global_costmap" />
@@ -57,9 +39,8 @@
     <rosparam file="$(find my_robot_nav)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
 
     <!-- Load DWA Planner parameters -->
-    <rosparam file="$(find my_robot_nav)/config/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find my_robot_nav)/config/dwa_params.yaml" command="load" />
   </node>
-
 
   <!-- RViz Node -->
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find my_robot_nav)/rviz/navi_config.rviz" />

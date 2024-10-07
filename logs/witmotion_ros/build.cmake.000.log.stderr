@@ -1,0 +1,8 @@
+fatal: detected dubious ownership in repository at '/app/src/witmotion_IMU_ros'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /app/src/witmotion_IMU_ros
+fatal: detected dubious ownership in repository at '/app/src/witmotion_IMU_ros/witmotion-uart-qt'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /app/src/witmotion_IMU_ros/witmotion-uart-qt

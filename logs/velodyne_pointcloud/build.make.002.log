@@ -1,0 +1,5 @@
+[  7%] Built target velodyne_pointcloud_gencfg
+[ 30%] Built target velodyne_rawdata
+[ 53%] Built target data_containers
+[ 76%] Built target transform_nodelet
+[100%] Built target transform_node

@@ -1,0 +1,12 @@
+Symlinking /app/devel/./_setup_util.py
+Symlinking /app/devel/./setup.bash
+Symlinking /app/devel/./local_setup.bash
+Symlinking /app/devel/./local_setup.sh
+Symlinking /app/devel/./local_setup.zsh
+Symlinking /app/devel/./setup.sh
+Symlinking /app/devel/./setup.zsh
+Symlinking /app/devel/./env.sh
+Symlinking /app/devel/./cmake.lock
+Symlinking /app/devel/share/catkin_tools_prebuild/cmake/catkin_tools_prebuildConfig-version.cmake
+Symlinking /app/devel/share/catkin_tools_prebuild/cmake/catkin_tools_prebuildConfig.cmake
+Symlinking /app/devel/lib/pkgconfig/catkin_tools_prebuild.pc

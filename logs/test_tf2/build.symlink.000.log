@@ -1,0 +1,3 @@
+Symlinking /app/devel/share/test_tf2/cmake/test_tf2Config.cmake
+Symlinking /app/devel/share/test_tf2/cmake/test_tf2Config-version.cmake
+Symlinking /app/devel/lib/pkgconfig/test_tf2.pc

@@ -1,0 +1,12 @@
+Symlinking /app/devel/include/global_planner/GlobalPlannerConfig.h
+Symlinking /app/devel/share/global_planner/docs/GlobalPlannerConfig.wikidoc
+Symlinking /app/devel/share/global_planner/docs/GlobalPlannerConfig-usage.dox
+Symlinking /app/devel/share/global_planner/docs/GlobalPlannerConfig.dox
+Symlinking /app/devel/share/global_planner/cmake/global_plannerConfig.cmake
+Symlinking /app/devel/share/global_planner/cmake/global_plannerConfig-version.cmake
+Symlinking /app/devel/lib/libglobal_planner.so
+Symlinking /app/devel/lib/python3/dist-packages/global_planner/__init__.py
+Symlinking /app/devel/lib/python3/dist-packages/global_planner/cfg/__init__.py
+Symlinking /app/devel/lib/python3/dist-packages/global_planner/cfg/GlobalPlannerConfig.py
+Symlinking /app/devel/lib/global_planner/planner
+Symlinking /app/devel/lib/pkgconfig/global_planner.pc

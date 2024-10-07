@@ -1,0 +1,3 @@
+Symlinking /app/devel/share/hector_slam_launch/cmake/hector_slam_launchConfig-version.cmake
+Symlinking /app/devel/share/hector_slam_launch/cmake/hector_slam_launchConfig.cmake
+Symlinking /app/devel/lib/pkgconfig/hector_slam_launch.pc

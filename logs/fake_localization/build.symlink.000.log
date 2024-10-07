@@ -1,0 +1,4 @@
+Symlinking /app/devel/share/fake_localization/cmake/fake_localizationConfig.cmake
+Symlinking /app/devel/share/fake_localization/cmake/fake_localizationConfig-version.cmake
+Symlinking /app/devel/lib/fake_localization/fake_localization
+Symlinking /app/devel/lib/pkgconfig/fake_localization.pc

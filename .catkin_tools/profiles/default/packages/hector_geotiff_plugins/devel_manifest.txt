@@ -1,0 +1,6 @@
+hector_slam/hector_geotiff_plugins
+/app/devel/.private/hector_geotiff_plugins/cmake.lock /app/devel/./cmake.lock
+/app/devel/.private/hector_geotiff_plugins/share/hector_geotiff_plugins/cmake/hector_geotiff_pluginsConfig.cmake /app/devel/share/hector_geotiff_plugins/cmake/hector_geotiff_pluginsConfig.cmake
+/app/devel/.private/hector_geotiff_plugins/share/hector_geotiff_plugins/cmake/hector_geotiff_pluginsConfig-version.cmake /app/devel/share/hector_geotiff_plugins/cmake/hector_geotiff_pluginsConfig-version.cmake
+/app/devel/.private/hector_geotiff_plugins/lib/libhector_geotiff_plugins.so /app/devel/lib/libhector_geotiff_plugins.so
+/app/devel/.private/hector_geotiff_plugins/lib/pkgconfig/hector_geotiff_plugins.pc /app/devel/lib/pkgconfig/hector_geotiff_plugins.pc

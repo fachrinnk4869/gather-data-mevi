@@ -1,0 +1,3 @@
+Symlinking /app/devel/share/navigation_pkg/cmake/navigation_pkgConfig.cmake
+Symlinking /app/devel/share/navigation_pkg/cmake/navigation_pkgConfig-version.cmake
+Symlinking /app/devel/lib/pkgconfig/navigation_pkg.pc

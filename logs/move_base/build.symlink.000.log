@@ -1,0 +1,12 @@
+Symlinking /app/devel/include/move_base/MoveBaseConfig.h
+Symlinking /app/devel/share/move_base/docs/MoveBaseConfig-usage.dox
+Symlinking /app/devel/share/move_base/docs/MoveBaseConfig.dox
+Symlinking /app/devel/share/move_base/docs/MoveBaseConfig.wikidoc
+Symlinking /app/devel/share/move_base/cmake/move_baseConfig-version.cmake
+Symlinking /app/devel/share/move_base/cmake/move_baseConfig.cmake
+Symlinking /app/devel/lib/libmove_base.so
+Symlinking /app/devel/lib/python3/dist-packages/move_base/__init__.py
+Symlinking /app/devel/lib/python3/dist-packages/move_base/cfg/MoveBaseConfig.py
+Symlinking /app/devel/lib/python3/dist-packages/move_base/cfg/__init__.py
+Symlinking /app/devel/lib/pkgconfig/move_base.pc
+Symlinking /app/devel/lib/move_base/move_base

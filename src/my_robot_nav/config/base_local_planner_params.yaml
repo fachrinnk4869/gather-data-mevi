@@ -1,4 +1,4 @@
-base_local_planner: "dwa_local_planner/DWAPlannerROS"
+base_local_planner: "dwa_planner/DWAPlannerROS"
 
 # DWA parameters
 max_vel_x: 0.5  # Maximum linear velocity

@@ -1,0 +1,5 @@
+Symlinking /app/devel/share/tf2_py/cmake/tf2_pyConfig-version.cmake
+Symlinking /app/devel/share/tf2_py/cmake/tf2_pyConfig.cmake
+Symlinking /app/devel/lib/python3/dist-packages/tf2_py/_tf2.so
+Symlinking /app/devel/lib/python3/dist-packages/tf2_py/__init__.py
+Symlinking /app/devel/lib/pkgconfig/tf2_py.pc

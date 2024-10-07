@@ -1,0 +1,31 @@
+# Initial pose parameters
+initial_pose_x: 0
+initial_pose_y: 0
+initial_pose_a: 0
+initial_cov_xx: 0.05*0.05
+initial_cov_yy: 0.05*0.05
+initial_cov_aa: (3.14/192)*(3.14/192)
+
+# Particle limits
+min_particles: 50
+max_particles: 1000
+
+# AMCL update rate
+update_min_d: 0.001
+update_min_a: 0.001
+
+# Laser settings
+laser_min_range: -1.0
+laser_max_range: -1.0
+laser_min_beams: 30
+laser_z_hit: 0.95
+laser_z_rand: 0.05
+laser_model_type: likelihood_field
+
+# Odometry settings
+odom_model_type: diff-corrected
+odom_alpha1: 0.005
+odom_alpha2: 0.005
+odom_alpha3: 0.005
+odom_alpha4: 0.005
+

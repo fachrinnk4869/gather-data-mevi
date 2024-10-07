@@ -1,0 +1,36 @@
+[  1%] [34m[1mAutomatic MOC for target wt31n-calibration[0m
+[  2%] [34m[1mAutomatic MOC for target wt31n-standalone-decoder[0m
+[  4%] [34m[1mAutomatic MOC for target witmotion-uart[0m
+[  4%] Built target wt31n-standalone-decoder_autogen
+[  4%] Built target wt31n-calibration_autogen
+[  4%] Built target witmotion-uart_autogen
+[  8%] Built target wt31n-standalone-decoder
+[ 19%] Built target wt31n-calibration
+[ 25%] Built target witmotion-uart
+[ 28%] [34m[1mAutomatic MOC for target witmotion_ros[0m
+[ 28%] [34m[1mAutomatic MOC for target message-enumerator[0m
+[ 29%] [34m[1mAutomatic MOC for target witmotion-wt31n[0m
+[ 29%] Built target witmotion_ros_autogen
+[ 29%] Built target message-enumerator_autogen
+[ 29%] Built target witmotion-wt31n_autogen
+[ 31%] [34m[1mAutomatic MOC for target witmotion-wt901[0m
+[ 38%] Built target witmotion_ros
+[ 38%] Built target witmotion-wt901_autogen
+[ 46%] Built target witmotion-wt31n
+[ 53%] Built target message-enumerator
+[ 61%] Built target witmotion-wt901
+[ 62%] [34m[1mAutomatic MOC for target witmotion_ros_node[0m
+[ 64%] [34m[1mAutomatic MOC for target witmotionctl-wt31n[0m
+[ 64%] Built target witmotion_ros_node_autogen
+[ 65%] Built target witmotionctl-wt31n_autogen
+[ 65%] [34m[1mAutomatic MOC for target witmotion-jy901[0m
+[ 67%] [34m[1mAutomatic MOC for target witmotionctl-wt901[0m
+[ 67%] Built target witmotion-jy901_autogen
+[ 67%] Built target witmotionctl-wt901_autogen
+[ 71%] Built target witmotion_ros_node
+[ 79%] Built target witmotionctl-wt31n
+[ 83%] Built target witmotion-jy901
+[ 91%] Built target witmotionctl-wt901
+[ 92%] [34m[1mAutomatic MOC for target witmotionctl-jy901[0m
+[ 92%] Built target witmotionctl-jy901_autogen
+[100%] Built target witmotionctl-jy901

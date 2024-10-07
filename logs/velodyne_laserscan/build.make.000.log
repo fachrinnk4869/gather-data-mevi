@@ -1,0 +1,14 @@
+[35m[1mScanning dependencies of target velodyne_laserscan_gencfg[0m
+[ 16%] [34m[1mGenerating dynamic reconfigure files from cfg/VelodyneLaserScan.cfg: /app/devel/.private/velodyne_laserscan/include/velodyne_laserscan/VelodyneLaserScanConfig.h /app/devel/.private/velodyne_laserscan/lib/python3/dist-packages/velodyne_laserscan/cfg/VelodyneLaserScanConfig.py[0m
+Generating reconfiguration files for VelodyneLaserScan in velodyne_laserscan
+Wrote header file in /app/devel/.private/velodyne_laserscan/include/velodyne_laserscan/VelodyneLaserScanConfig.h
+[ 16%] Built target velodyne_laserscan_gencfg
+[35m[1mScanning dependencies of target velodyne_laserscan[0m
+[ 33%] [32mBuilding CXX object CMakeFiles/velodyne_laserscan.dir/src/velodyne_laserscan.cpp.o[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/velodyne_laserscan.dir/src/nodelet.cpp.o[0m
+[ 66%] [32m[1mLinking CXX shared library /app/devel/.private/velodyne_laserscan/lib/libvelodyne_laserscan.so[0m
+[ 66%] Built target velodyne_laserscan
+[35m[1mScanning dependencies of target velodyne_laserscan_node[0m
+[ 83%] [32mBuilding CXX object CMakeFiles/velodyne_laserscan_node.dir/src/node.cpp.o[0m
+[100%] [32m[1mLinking CXX executable /app/devel/.private/velodyne_laserscan/lib/velodyne_laserscan/velodyne_laserscan_node[0m
+[100%] Built target velodyne_laserscan_node
