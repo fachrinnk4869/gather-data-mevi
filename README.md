@@ -8,7 +8,7 @@ Ensure the following are installed on your system:
 
 - **Docker**: [Install Docker](https://docs.docker.com/get-docker/).
 - **Docker Compose**: [Install Docker Compose](https://docs.docker.com/compose/install/).
-- A camera connected to your machine (e.g., Brio, RealSense, ZED).
+- A camera connected to your machine (ZED 2i).
 
 ## Setup
 
