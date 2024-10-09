@@ -45,22 +45,19 @@ class ZEDCamera:
         return None, None
 
 
+# Test function for ZED Camera
 if __name__ == "__main__":
-    down_res_img = 1  # Resolution downscaling factor
-    camera = ZEDCamera(down_res_img=down_res_img)
+    zed_camera = ZEDCamera(sl.RESOLUTION.HD720, 20,
+                           sl.DEPTH_MODE.ULTRA, serial_number=35828564)
 
-    # Open and initialize camera
-    camera.open_camera()
-    camera.enable_tracking()
+    # Retrieve frame data
+    rgb_data, depth_data = zed_camera.get_frame_data()
+    if rgb_data is not None:
+        print("Camera RGB Data Retrieved!")
+        cv2.imwrite("test_rgb_image.png", rgb_data)
 
-    # Create frame size object
-    frame_size = FrameSize(down_res_img)
-
-    print("--------WAIT CALIB ZEDCAM & WIT (3s)---------")
-    time.sleep(3)
-
-    # Capture frames
-    camera.capture_frame(frame_size)
-
-    # Close the camera after capturing
-    camera.close_camera()
+    # Retrieve pose data
+    translation, orientation = zed_camera.get_pose()
+    if translation is not None:
+        print("Camera Pose - Translation:", translation)
+        print("Camera Pose - Orientation:", orientation)

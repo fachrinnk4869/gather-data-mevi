@@ -30,16 +30,8 @@ class IMUSensor:
         }
 
 
+# Test function for IMU
 if __name__ == "__main__":
-    # Initialize the IMU
-    imu_sensor = IMUSensor()
-
-    # Get and print important sensor data
-    latest_acc = imu_sensor.get_latest_acceleration()
-    latest_gyr = imu_sensor.get_latest_angular_velocity()
-    latest_mag = imu_sensor.get_latest_magnetic_vector()
-    imu_sensor.display_orientation()
-
-    print("Acceleration: ", latest_acc)
-    print("Angular Velocity: ", latest_gyr)
-    print("Magnetic Vector: ", latest_mag)
+    imu_sensor = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=115200)
+    imu_data = imu_sensor.get_imu_data()
+    print("IMU Data:", imu_data)

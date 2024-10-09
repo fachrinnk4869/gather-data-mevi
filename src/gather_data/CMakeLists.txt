@@ -192,6 +192,7 @@ include_directories(
 # )
 catkin_install_python(PROGRAMS
   gather_data.py
+  lidar_data.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 #############
