@@ -13,8 +13,8 @@ from utilx.camera import ZEDCamera
 from utilx.lidar import LidarSensor
 
 # Create directories for storing data
-datadir = "dataset/datasetx/"
-prefix = str(date.today()) + "_route02"
+datadir = "dataset"
+prefix = str(date.today()) + "_route01"
 dir_meta = datadir + prefix + "/meta/"
 dir_front_cam = datadir + prefix + "/camera/front/"
 dir_lidar = datadir + prefix + "/lidar/"
@@ -27,14 +27,14 @@ os.makedirs(dir_lidar, exist_ok=True)
 imu = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=115200)
 camera = ZEDCamera(sl.RESOLUTION.HD720, 20,
                    sl.DEPTH_MODE.ULTRA, serial_number=35828564)
-lidar_sensor = LidarSensor()
+lidar_sensor = LidarSensor("/velodyne_points")
 
 # ROS initialization
 rospy.init_node('data_retriever', anonymous=True)
 
 # ROS Subscribers
 loc_sub = message_filters.Subscriber("/ublox/fix", NavSatFix)
-lidar_sub = message_filters.Subscriber("/velodyne_points", PointCloud2)
+lidar_sub = lidar_sensor.start_listener()
 
 
 def callback(location, lidar_msg):

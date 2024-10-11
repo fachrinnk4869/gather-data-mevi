@@ -12,7 +12,7 @@ class ZEDCamera:
         init_params.camera_fps = fps
         init_params.depth_mode = depth_mode
         init_params.coordinate_units = sl.UNIT.METER
-        init_params.set_from_serial_number(serial_number)
+        # init_params.set_from_serial_number(serial_number) # check serial number
         err = self.zed.open(init_params)
 
         if err != sl.ERROR_CODE.SUCCESS:
@@ -23,7 +23,7 @@ class ZEDCamera:
         self.runtime_params = sl.RuntimeParameters()
         self.frame_size = (1280, 720)
 
-    def get_frame_data(self):
+    def get_frame(self):
         rgb_image = sl.Mat(self.frame_size[0], self.frame_size[1])
         depth_map = sl.Mat(self.frame_size[0], self.frame_size[1])
 
@@ -51,7 +51,7 @@ if __name__ == "__main__":
                            sl.DEPTH_MODE.ULTRA, serial_number=35828564)
 
     # Retrieve frame data
-    rgb_data, depth_data = zed_camera.get_frame_data()
+    rgb_data, depth_data = zed_camera.get_frame()
     if rgb_data is not None:
         print("Camera RGB Data Retrieved!")
         cv2.imwrite("test_rgb_image.png", rgb_data)
