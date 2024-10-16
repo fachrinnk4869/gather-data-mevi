@@ -1,5 +1,4 @@
 # lidar_module.py
-from pypcd import pypcd
 import message_filters
 from sensor_msgs.msg import NavSatFix
 import rospy
@@ -17,20 +16,21 @@ class GPSSensor:
             f"Subscribed to {self.topic_name} topic. Waiting for data...")
         return loc_sub
 
+if __name__ == "__main__":
+    print("halo")
+    # Test function for GPS
+    rospy.init_node('gps_listener_node', anonymous=True)
+    topic_name = "/ublox/fix"  # Update this to match your Lidar point cloud topic
+    lidar_sensor = GPSSensor(topic_name)
 
-# Test function for GPS
-rospy.init_node('gps_listener_node', anonymous=True)
-topic_name = "/ublox/fix"  # Update this to match your Lidar point cloud topic
-lidar_sensor = GPSSensor(topic_name)
 
+    try:
+        loc_sub = lidar_sensor.start_listener()
+    except rospy.ROSInterruptException:
+        rospy.logerr("ROS node interrupted.")
 
-try:
-    loc_sub = lidar_sensor.start_listener()
-except rospy.ROSInterruptException:
-    rospy.logerr("ROS node interrupted.")
+    # ROS message synchronizer
+    ts = message_filters.ApproximateTimeSynchronizer(
+        [loc_sub], 25, 0.25)
 
-# ROS message synchronizer
-ts = message_filters.ApproximateTimeSynchronizer(
-    [loc_sub], 25, 0.25)
-
-rospy.spin()
+    rospy.spin()

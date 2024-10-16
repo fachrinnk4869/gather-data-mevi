@@ -13,8 +13,13 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix  # For X11 forwarding
       - .:/app
+      - /home/jetson/RTKLIB:/rtk
+      - /home/jetson/RTKLIB/app/consapp/rtkrcv/gcc:/app/rtk
+    ports:
+      - 9000:9000
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev:/dev
       - /dev/video0:/dev/video0
       - /dev/bus/usb:/dev/bus/usb  # Allow USB access
     network_mode: host  # Use host network

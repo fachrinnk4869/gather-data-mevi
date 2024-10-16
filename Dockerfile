@@ -1,16 +1,17 @@
 FROM stereolabs/zed:4.1-devel-jetson-jp5.1.2
 # Set the working directory
 WORKDIR /app/src
-RUN pip install pyyaml
-RUN pip install witmotion
 # Install dependencies and ROS Noetic
 RUN apt-get update && apt-get install -y \
-    python3-pip \
-    python3-opencv \
-    wget \
-    lsb-release \
-    gnupg2 \
-    && rm -rf /var/lib/apt/lists/*
+python3-pip \
+python3-opencv \
+wget \
+lsb-release \
+gnupg2 \
+&& rm -rf /var/lib/apt/lists/*
+
+RUN pip install pyyaml
+RUN pip install witmotion
 
 # Setup sources.list for ROS Noetic
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros-latest.list'
@@ -33,4 +34,4 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-message-filters
 
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
-RUN apt-get install -y ros-noetic-rosserial libsdl-image1.2-dev ros-noetic-move-base libqt5serialport5-dev libpcap-dev python3-catkin-tools
+RUN apt-get install -y ros-noetic-rosserial libsdl-image1.2-dev ros-noetic-move-base libqt5serialport5-dev libpcap-dev python3-catkin-tools ros-noetic-rtcm-msgs ros-noetic-nmea-msgs ros-noetic-amcl

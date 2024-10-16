@@ -1,0 +1,23 @@
+acceleration_xyz:
+- 0.31582031250000003
+- -9.771289062500001
+- 0.26796875000000003
+angular_speed_xyz:
+- 0.0
+- 0.0
+- 0.0
+global_orientation_rpy:
+- -88.4564208984375
+- -1.878662109375
+- 102.392578125
+global_position_latlon:
+- -6.8811545999999995
+- 107.6115669
+local_orientation_xyzw: null
+local_position_xyz: null
+magnetic_xyz:
+- 1455
+- -3421
+- -200
+sec: '1729073145'
+seq: 0000000864

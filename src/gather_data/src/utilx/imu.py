@@ -32,6 +32,6 @@ class IMUSensor:
 
 # Test function for IMU
 if __name__ == "__main__":
-    imu_sensor = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=115200)
+    imu_sensor = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=9600)
     imu_data = imu_sensor.get_imu_data()
     print("IMU Data:", imu_data)

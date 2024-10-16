@@ -5,13 +5,16 @@ import cv2
 
 
 class ZEDCamera:
-    def __init__(self, resolution, fps, depth_mode, serial_number):
+    def __init__(self, resolution, fps, depth_mode):
         self.zed = sl.Camera()
         init_params = sl.InitParameters()
         init_params.camera_resolution = resolution
         init_params.camera_fps = fps
         init_params.depth_mode = depth_mode
         init_params.coordinate_units = sl.UNIT.METER
+        init_params.coordinate_system = sl.COORDINATE_SYSTEM.RIGHT_HANDED_Z_UP_X_FWD  #https://www.stereolabs.com/docs/positional-tracking/using-tracking/
+        init_params.depth_minimum_distance = 0.3
+        init_params.depth_maximum_distance = 40
         # init_params.set_from_serial_number(serial_number) # check serial number
         err = self.zed.open(init_params)
 
@@ -38,17 +41,15 @@ class ZEDCamera:
 
     def get_pose(self):
         pose = sl.Pose()
-        if self.zed.get_position(pose) == sl.POSITIONAL_TRACKING_STATE.OK:
-            translation = pose.get_translation(sl.Translation()).get()
-            orientation = pose.get_orientation(sl.Orientation()).get()
-            return translation, orientation
-        return None, None
-
+        self.zed.get_position(pose)
+        translation = np.array(pose.get_translation(sl.Translation()).get()).tolist()
+        orientation = np.array(pose.get_orientation(sl.Orientation()).get()).tolist()
+        return translation, orientation
 
 # Test function for ZED Camera
 if __name__ == "__main__":
     zed_camera = ZEDCamera(sl.RESOLUTION.HD720, 20,
-                           sl.DEPTH_MODE.ULTRA, serial_number=35828564)
+                           sl.DEPTH_MODE.ULTRA)
 
     # Retrieve frame data
     rgb_data, depth_data = zed_camera.get_frame()

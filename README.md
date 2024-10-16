@@ -39,7 +39,9 @@ Once the container is running, you can execute the Python script inside the Dock
 Once inside the Docker container, run the following Python script to gather data from your camera:
 
 ```bash
-python3 gather_data_camera.py
+roslaunch velodyne_pointcloud VLP16_points.launch
+roslaunch ublox_gps ublox_device.launch param_file_name:=zed_f9p
+
 ```
 
 ### 3. Stopping the Containers
