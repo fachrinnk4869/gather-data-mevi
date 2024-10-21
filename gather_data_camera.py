@@ -130,6 +130,8 @@ def callback0():
             c.close()
 
             #rgbd
+            cv2.imshow("hehe", rgb_zed2i)
+            cv2.waitKey(1)
             cv2.imwrite(f"{dir_front_cam}/rgb/{index}.png", rgb_zed2i)
             np.save(f"{dir_front_cam}/depth/cld/{index}.npy", depth_cld_zed2i)
 

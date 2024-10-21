@@ -1,6 +1,5 @@
 # lidar_module.py
 import rospy
-from sensor_msgs.msg import PointCloud2
 import ros_numpy
 import numpy as np
 import open3d as o3d

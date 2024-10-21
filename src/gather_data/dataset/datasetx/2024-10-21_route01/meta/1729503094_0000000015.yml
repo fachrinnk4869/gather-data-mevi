@@ -1,0 +1,34 @@
+acceleration_xyz:
+- 0.20576171875000002
+- -9.76171875
+- -0.21533203125000003
+angular_speed_xyz:
+- 0.0
+- 0.0
+- 0.0
+global_orientation_rpy:
+- -91.2359619140625
+- -1.2249755859375
+- 101.62353515625
+global_position_latlon:
+- -6.8812652
+- 107.61153189999999
+local_orientation_xyzw:
+- 0.0
+- 0.0
+- 0.0
+- 1.0
+local_position_xyz:
+- 0.0
+- 0.0
+- 0.0
+magnetic_xyz:
+- 1368
+- -3088
+- -345
+sec: '1729503094'
+seq: '0000000015'
+steer: null
+throttle: null
+vel_kanan: null
+vel_kiri: null

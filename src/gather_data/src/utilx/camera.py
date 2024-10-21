@@ -25,6 +25,9 @@ class ZEDCamera:
 
         self.runtime_params = sl.RuntimeParameters()
         self.frame_size = (1280, 720)
+        self.pose = sl.Pose()
+        tracking_parameters2i = sl.PositionalTrackingParameters()
+        track_err2i = self.zed.enable_positional_tracking(tracking_parameters2i)
 
     def get_frame(self):
         rgb_image = sl.Mat(self.frame_size[0], self.frame_size[1])
@@ -35,15 +38,16 @@ class ZEDCamera:
             self.zed.retrieve_measure(depth_map, sl.MEASURE.XYZ)
             rgb_data = rgb_image.get_data()[:, :, :3]
             depth_data = depth_map.get_data()
-
+            cv2.imshow("hehe", rgb_data)
+            cv2.waitKey(1)
             return rgb_data, depth_data
         return None, None
 
     def get_pose(self):
-        pose = sl.Pose()
-        self.zed.get_position(pose)
-        translation = np.array(pose.get_translation(sl.Translation()).get()).tolist()
-        orientation = np.array(pose.get_orientation(sl.Orientation()).get()).tolist()
+        
+        self.zed.get_position(self.pose)
+        translation = np.array(self.pose.get_translation(sl.Translation()).get()).tolist()
+        orientation = np.array(self.pose.get_orientation(sl.Orientation()).get()).tolist()
         return translation, orientation
 
 # Test function for ZED Camera

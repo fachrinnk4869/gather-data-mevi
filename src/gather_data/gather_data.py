@@ -8,13 +8,20 @@ import numpy as np
 from sensor_msgs.msg import NavSatFix, PointCloud2
 from datetime import date
 import os
+import rospkg
 from utilx.imu import IMUSensor
 from utilx.camera import ZEDCamera
 from utilx.lidar import LidarSensor
 from utilx.gps import GPSSensor
+from utilx.low_level import LowLevelSensor
+import time
 
 # Create directories for storing data
-datadir = "dataset/datasetx/"
+rospack = rospkg.RosPack()
+package_path = rospack.get_path('gather_data')  # Replace with your package name
+
+# Create directories for storing data
+datadir = os.path.join(package_path, "dataset/datasetx/")
 prefix = str(date.today()) + "_route01"
 dir_meta = datadir + prefix + "/meta/"
 dir_front_cam = datadir + prefix + "/camera/front/"
@@ -31,13 +38,18 @@ camera = ZEDCamera(sl.RESOLUTION.HD720, 20,
                    sl.DEPTH_MODE.ULTRA)
 gps_sensor = GPSSensor('ublox/fix')
 lidar_sensor = LidarSensor('velodyne_points')
+throttle_sensor = LowLevelSensor('gas')
+vel_kiri_sensor = LowLevelSensor('/encoder1_value')
+vel_kanan_sensor = LowLevelSensor('/encoder2_value')
+steer_sensor = LowLevelSensor('stir')
 
 try:
     lidar_sub = lidar_sensor.start_listener()
     loc_sub = gps_sensor.start_listener()
 except rospy.ROSInterruptException:
     rospy.logerr("ROS node interrupted.")
-
+print("--------WAIT CALIB ZEDCAM & WIT (3s)---------")
+time.sleep(3)
 
 def callback(location, lidar_msg):
     # Get camera data
@@ -48,6 +60,11 @@ def callback(location, lidar_msg):
     # Get IMU data
     imu_data = imu.get_imu_data()
 
+    throttle = throttle_sensor.get_data()
+    vel_kiri = vel_kiri_sensor.get_data()
+    vel_kanan = vel_kanan_sensor.get_data()
+    steer = steer_sensor.get_data()
+
     # # Log metadata
     sec = str(location.header.stamp.secs).zfill(10)
     seq = str(location.header.seq).zfill(10)
@@ -56,6 +73,10 @@ def callback(location, lidar_msg):
     meta_log = {
         'sec': sec,
         'seq': seq,
+        'throttle' : throttle,
+        'vel_kiri' : vel_kiri,
+        'vel_kanan' : vel_kanan,
+        'steer' : steer,
         'global_position_latlon': [location.latitude, location.longitude],
         'global_orientation_rpy': imu_data['orientation_rpy'],
         'local_position_xyz': translation,
