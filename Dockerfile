@@ -1,6 +1,8 @@
 FROM stereolabs/zed:4.1-devel-jetson-jp5.1.2
 # Set the working directory
 WORKDIR /app/src
+SHELL ["/bin/bash", "-c"]
+RUN apt update -y
 # Install dependencies and ROS Noetic
 RUN apt-get update && apt-get install -y \
 python3-pip \

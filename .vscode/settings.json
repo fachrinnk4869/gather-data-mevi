@@ -1,5 +1,9 @@
 {
     "python.analysis.extraPaths": [
         "./src/gather_data/src/gather_data"
+    ],
+    "ros.distro": "noetic",
+    "python.autoComplete.extraPaths": [
+        "/opt/ros/noetic/lib/python3/dist-packages"
     ]
 }
