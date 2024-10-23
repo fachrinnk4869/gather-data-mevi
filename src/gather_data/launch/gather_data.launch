@@ -9,17 +9,21 @@
   <node pkg="gather_data" type="gather_data.py" name="gather_data_node" output="screen" />
 
   <!-- Run serial_node.py for /dev/ttyACM0 -->
-  <node pkg="rosserial_python" type="serial_node.py" name="serial_node_acm0" output="screen">
+  <node pkg="rosserial_python" type="serial_node.py" name="serial_node_acm1" output="screen">
     <param name="port" value="/dev/ttyACM1"/>
   </node>
 
   <!-- Run serial_node.py for /dev/ttyACM1 -->
-  <node pkg="rosserial_python" type="serial_node.py" name="serial_node_acm1" output="screen">
+  <node pkg="rosserial_python" type="serial_node.py" name="serial_node_acm2" output="screen">
     <param name="port" value="/dev/ttyACM2"/>
   </node>
-
-  <!-- Run serial_node.py for /dev/ttyACM2 -->
-  <node pkg="rosserial_python" type="serial_node.py" name="serial_node_acm2" output="screen">
+  <!-- Run serial_node.py for /dev/ttyACM1 -->
+  <node pkg="rosserial_python" type="serial_node.py" name="serial_node_acm3" output="screen">
     <param name="port" value="/dev/ttyACM3"/>
   </node>
+  <!-- Launch rqt and load the saved perspective -->
+  <node pkg="rqt_gui" type="rqt_gui" name="rqt_with_perspective" output="screen" args="--perspective-file $(find gather_data)/perspectives/low_level.perspective" />
+
+  <node pkg="rviz" type="rviz" name="rviz_node" output="screen" args="-f velodyne -d $(find gather_data)/rviz/lidar_visual.rviz" />
+
 </launch>

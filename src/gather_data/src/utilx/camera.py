@@ -52,7 +52,7 @@ class ZEDCamera:
 
 # Test function for ZED Camera
 if __name__ == "__main__":
-    zed_camera = ZEDCamera(sl.RESOLUTION.HD720, 20,
+    zed_camera = ZEDCamera(sl.RESOLUTION.HD720, 30,
                            sl.DEPTH_MODE.ULTRA)
 
     # Retrieve frame data

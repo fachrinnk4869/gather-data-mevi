@@ -16,9 +16,12 @@ services:
     ports:
       - 9000:9000
     devices:
-      - /dev/ttyUSB0:/dev/ttyUSB0
-      - /dev/ttyACM3:/dev/ttyACM3
       - /dev:/dev
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyACM0:/dev/ttyACM0
+      - /dev/ttyACM1:/dev/ttyACM1
+      - /dev/ttyACM2:/dev/ttyACM2
+      - /dev/ttyACM3:/dev/ttyACM3
       - /dev/video0:/dev/video0
       - /dev/bus/usb:/dev/bus/usb  # Allow USB access
     network_mode: host  # Use host network

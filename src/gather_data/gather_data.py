@@ -34,7 +34,7 @@ os.makedirs(dir_lidar, exist_ok=True)
 rospy.init_node('data_retriever', anonymous=True)
 # Initialize sensors
 imu = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=9600)
-camera = ZEDCamera(sl.RESOLUTION.HD720, 20,
+camera = ZEDCamera(sl.RESOLUTION.AUTO, 60,
                    sl.DEPTH_MODE.ULTRA)
 gps_sensor = GPSSensor('ublox/fix')
 lidar_sensor = LidarSensor('velodyne_points')

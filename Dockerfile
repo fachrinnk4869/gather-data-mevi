@@ -37,4 +37,5 @@ RUN apt-get update && apt-get install -y \
 
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 RUN echo "source /app/devel/setup.bash" >> ~/.bashrc
-RUN apt-get install -y ros-noetic-rosserial libsdl-image1.2-dev ros-noetic-move-base libqt5serialport5-dev libpcap-dev python3-catkin-tools ros-noetic-rtcm-msgs ros-noetic-nmea-msgs ros-noetic-amcl
+RUN apt-get install -y ros-noetic-rosserial libsdl-image1.2-dev ros-noetic-move-base libqt5serialport5-dev libpcap-dev python3-catkin-tools ros-noetic-rtcm-msgs ros-noetic-nmea-msgs ros-noetic-amcl ros-noetic-rqt ros-noetic-rqt-common-plugins
+
