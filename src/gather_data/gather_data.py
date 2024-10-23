@@ -18,7 +18,8 @@ import time
 
 # Create directories for storing data
 rospack = rospkg.RosPack()
-package_path = rospack.get_path('gather_data')  # Replace with your package name
+# Replace with your package name
+package_path = rospack.get_path('gather_data')
 
 # Create directories for storing data
 datadir = os.path.join(package_path, "dataset/datasetx/")
@@ -36,7 +37,7 @@ rospy.init_node('data_retriever', anonymous=True)
 imu = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=9600)
 camera = ZEDCamera(sl.RESOLUTION.AUTO, 60,
                    sl.DEPTH_MODE.ULTRA)
-gps_sensor = GPSSensor('ublox/fix')
+gps_sensor = GPSSensor('latlon')
 lidar_sensor = LidarSensor('velodyne_points')
 throttle_sensor = LowLevelSensor('gas')
 vel_kiri_sensor = LowLevelSensor('/encoder1_value')
@@ -51,12 +52,13 @@ except rospy.ROSInterruptException:
 print("--------WAIT CALIB ZEDCAM & WIT (3s)---------")
 time.sleep(3)
 
+
 def callback(location, lidar_msg):
     # Get camera data
     rgb_data, depth_data = camera.get_frame()
     translation, orientation = camera.get_pose()
     rospy.loginfo(
-            f"Received data...")
+        f"Received data...")
     # Get IMU data
     imu_data = imu.get_imu_data()
 
@@ -73,10 +75,10 @@ def callback(location, lidar_msg):
     meta_log = {
         'sec': sec,
         'seq': seq,
-        'throttle' : throttle,
-        'vel_kiri' : vel_kiri,
-        'vel_kanan' : vel_kanan,
-        'steer' : steer,
+        'throttle': throttle,
+        'vel_kiri': vel_kiri,
+        'vel_kanan': vel_kanan,
+        'steer': steer,
         'global_position_latlon': [location.latitude, location.longitude],
         'global_orientation_rpy': imu_data['orientation_rpy'],
         'local_position_xyz': translation,
@@ -98,6 +100,7 @@ def callback(location, lidar_msg):
     except Exception as e:
         rospy.logerr(f"Failed to save camera data: {str(e)}")
     lidar_sensor.save_lidar_data(lidar_msg, dir_lidar + file_name + ".pcd")
+
 
 # ROS message synchronizer
 ts = message_filters.ApproximateTimeSynchronizer(

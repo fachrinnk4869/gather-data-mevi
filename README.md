@@ -1,63 +1,74 @@
-# Camera Data Collection Project
 
-This project is designed to gather data from a connected camera using Docker and Docker Compose. Follow the instructions below to set up and run the project.
+# Pengumpulan Data dari Berbagai Sensor
 
-## Prerequisites
+## Langkah-langkah
 
-Ensure the following are installed on your system:
+1. **Git Pull atau Clone**  
+   Sebelum memulai, pastikan untuk memperbarui repository dengan menjalankan:
+   ```bash
+   git pull origin main
+   ```
+   atau jika belum memiliki repository, gunakan:
+   ```bash
+   git clone <URL_repository>
+   ```
 
-- **Docker**: [Install Docker](https://docs.docker.com/get-docker/).
-- **Docker Compose**: [Install Docker Compose](https://docs.docker.com/compose/install/).
-- A camera connected to your machine (ZED 2i).
+2. **Masuk ke Direktori Catkin Workspace**  
+   Navigasi ke direktori Catkin Workspace:
+   ```bash
+   cd ~/catkin_ws
+   ```
 
-## Setup
+3. **Hapus Folder `devel` dan `build`**  
+   Untuk memastikan tidak ada sisa build yang mengganggu, hapus folder `devel` dan `build`:
+   ```bash
+   sudo rm -rf devel build
+   ```
 
-### 1. Change directory of the Repository
+4. **Jalankan Docker Compose**  
+   Untuk menyiapkan lingkungan, jalankan:
+   ```bash
+   sudo docker compose up
+   ```
 
-First, change directory in jetson:
+5. **Di Dalam Docker, Jalankan Catkin Make**  
+   Setelah Docker berjalan, masuk ke direktori di atas dan jalankan:
+   ```bash
+   cd .. && catkin_make
+   ```
 
-```bash
-cd ~/catkin_ws
-```
+6. **Jalankan Launch File**  
+   Setelah build selesai, jalankan file launch:
+   ```bash
+   roslaunch gather_data gather_data.launch
+   ```
 
-### 2. Running the Project
+## Hal yang Harus Diperhatikan
 
-#### Step 1: Run the `run.bash` Script
+Sebelum menyalakan Jetson, pastikan untuk menyambungkan seluruh USB ke portnya masing-masing. Pastikan kabel kamera dan GPS terhubung langsung ke Jetson.
 
-The `run.bash` script uses Docker Compose to launch the necessary services. Simply execute the script as follows:
+Jika terjadi error saat menjalankan launch, lakukan debugging dengan mengikuti langkah berikut:
 
-```bash
-bash run.bash
-```
+1. **Navigasi ke Direktori Utilitas**  
+   ```bash
+   cd /app/src/gather_data/src/utilx
+   ```
 
-This will start the Docker container and any other services configured in your `docker-compose.yml` file.
+2. **Jalankan Python File Sesuai Dengan Device**  
+   Misalkan untuk debugging kamera, jalankan:
+   ```bash
+   python3 camera.py
+   ```
 
-Once the container is running, you can execute the Python script inside the Docker container to start gathering data from your camera
+   Untuk low-level sensor, gunakan `rosserial` untuk debugging dengan perintah berikut:
+   ```bash
+   rosrun rosserial_python serial_node.py _port:=/dev/ttyACM1
+   ```
+   (Port tergantung pada low-level sensor yang disambungkan).
 
-#### Step 2: Run the Python Script Inside Docker
+### Keterangan Tambahan
+- IMU menggunakan port: `/dev/ttyUSB0`
+- GPS (Kumar/u-blox) menggunakan port: `/dev/ttyACM0`
+- Low-level sensor lainnya menggunakan port: `/dev/ttyACM1` hingga `/dev/ttyACM3`
 
-Once inside the Docker container, run the following Python script to gather data from your camera:
-
-```bash
-roslaunch velodyne_pointcloud VLP16_points.launch
-roslaunch ublox_gps ublox_device.launch param_file_name:=zed_f9p
-
-```
-
-### 3. Stopping the Containers
-
-To stop and remove the running containers when you're done, run:
-
-```bash
-sudo docker compose down
-```
-
-This will stop and remove the containers, networks, and volumes defined in the `docker-compose.yml` file.
-
-## Troubleshooting
-
-- If you encounter issues accessing the camera from within the container, check that the camera drivers are correctly installed and accessible in the Docker container.
-
-```
-
-This version assumes that your `run.bash` script uses `docker compose` commands to manage the container lifecycle. Let me know if you need further adjustments!
+Jika ada port yang tidak terbaca, Anda dapat menjalankan `docker compose up` ulang atau merestart Jetson.

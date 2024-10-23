@@ -16,13 +16,13 @@ class GPSSensor:
             f"Subscribed to {self.topic_name} topic. Waiting for data...")
         return loc_sub
 
+
 if __name__ == "__main__":
     print("halo")
     # Test function for GPS
     rospy.init_node('gps_listener_node', anonymous=True)
-    topic_name = "/ublox/fix"  # Update this to match your Lidar point cloud topic
+    topic_name = "latlon"  # Update this to match your gps topic
     lidar_sensor = GPSSensor(topic_name)
-
 
     try:
         loc_sub = lidar_sensor.start_listener()
