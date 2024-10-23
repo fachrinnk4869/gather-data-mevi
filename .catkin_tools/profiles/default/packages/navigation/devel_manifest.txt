@@ -1,2 +1,0 @@
-navigation/navigation
-/app/devel/.private/navigation/cmake.lock /app/devel/./cmake.lock

@@ -1,5 +1,0 @@
-hector_slam/hector_slam_launch
-/app/devel/.private/hector_slam_launch/cmake.lock /app/devel/./cmake.lock
-/app/devel/.private/hector_slam_launch/share/hector_slam_launch/cmake/hector_slam_launchConfig-version.cmake /app/devel/share/hector_slam_launch/cmake/hector_slam_launchConfig-version.cmake
-/app/devel/.private/hector_slam_launch/share/hector_slam_launch/cmake/hector_slam_launchConfig.cmake /app/devel/share/hector_slam_launch/cmake/hector_slam_launchConfig.cmake
-/app/devel/.private/hector_slam_launch/lib/pkgconfig/hector_slam_launch.pc /app/devel/lib/pkgconfig/hector_slam_launch.pc

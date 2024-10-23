@@ -1,6 +1,0 @@
-Symlinking /app/devel/share/tf2_kdl/cmake/tf2_kdlConfig.cmake
-Symlinking /app/devel/share/tf2_kdl/cmake/tf2_kdlConfig-version.cmake
-Symlinking /app/devel/lib/python3/dist-packages/tf2_kdl/__init__.py
-Symlinking /app/devel/lib/pkgconfig/tf2_kdl.pc
-Symlinking /app/devel/lib/tf2_kdl/test.py
-Symlinking /app/devel/lib/tf2_kdl/cmake.lock

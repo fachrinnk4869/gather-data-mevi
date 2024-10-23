@@ -1,6 +1,0 @@
-navigation/rotate_recovery
-/app/devel/.private/rotate_recovery/cmake.lock /app/devel/./cmake.lock
-/app/devel/.private/rotate_recovery/share/rotate_recovery/cmake/rotate_recoveryConfig-version.cmake /app/devel/share/rotate_recovery/cmake/rotate_recoveryConfig-version.cmake
-/app/devel/.private/rotate_recovery/share/rotate_recovery/cmake/rotate_recoveryConfig.cmake /app/devel/share/rotate_recovery/cmake/rotate_recoveryConfig.cmake
-/app/devel/.private/rotate_recovery/lib/librotate_recovery.so /app/devel/lib/librotate_recovery.so
-/app/devel/.private/rotate_recovery/lib/pkgconfig/rotate_recovery.pc /app/devel/lib/pkgconfig/rotate_recovery.pc

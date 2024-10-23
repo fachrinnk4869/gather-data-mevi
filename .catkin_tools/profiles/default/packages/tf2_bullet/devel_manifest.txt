@@ -1,5 +1,0 @@
-geometry2/tf2_bullet
-/app/devel/.private/tf2_bullet/cmake.lock /app/devel/./cmake.lock
-/app/devel/.private/tf2_bullet/share/tf2_bullet/cmake/tf2_bulletConfig.cmake /app/devel/share/tf2_bullet/cmake/tf2_bulletConfig.cmake
-/app/devel/.private/tf2_bullet/share/tf2_bullet/cmake/tf2_bulletConfig-version.cmake /app/devel/share/tf2_bullet/cmake/tf2_bulletConfig-version.cmake
-/app/devel/.private/tf2_bullet/lib/pkgconfig/tf2_bullet.pc /app/devel/lib/pkgconfig/tf2_bullet.pc
