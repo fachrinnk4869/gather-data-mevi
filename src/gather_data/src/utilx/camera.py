@@ -52,17 +52,18 @@ class ZEDCamera:
 
 # Test function for ZED Camera
 if __name__ == "__main__":
-    zed_camera = ZEDCamera(sl.RESOLUTION.HD720, 30,
+    zed_camera = ZEDCamera(sl.RESOLUTION.AUTO, 60,
                            sl.DEPTH_MODE.ULTRA)
 
     # Retrieve frame data
-    rgb_data, depth_data = zed_camera.get_frame()
-    if rgb_data is not None:
-        print("Camera RGB Data Retrieved!")
-        cv2.imwrite("test_rgb_image.png", rgb_data)
+    while True:
+        rgb_data, depth_data = zed_camera.get_frame()
+        if rgb_data is not None:
+            print("Camera RGB Data Retrieved!")
+            cv2.imwrite("test_rgb_image.png", rgb_data)
 
-    # Retrieve pose data
-    translation, orientation = zed_camera.get_pose()
-    if translation is not None:
-        print("Camera Pose - Translation:", translation)
-        print("Camera Pose - Orientation:", orientation)
+        # Retrieve pose data
+        translation, orientation = zed_camera.get_pose()
+        if translation is not None:
+            print("Camera Pose - Translation:", translation)
+            print("Camera Pose - Orientation:", orientation)
