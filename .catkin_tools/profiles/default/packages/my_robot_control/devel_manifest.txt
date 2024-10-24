@@ -1,5 +1,0 @@
-my_robot_control
-/app/devel/.private/my_robot_control/cmake.lock /app/devel/./cmake.lock
-/app/devel/.private/my_robot_control/share/my_robot_control/cmake/my_robot_controlConfig-version.cmake /app/devel/share/my_robot_control/cmake/my_robot_controlConfig-version.cmake
-/app/devel/.private/my_robot_control/share/my_robot_control/cmake/my_robot_controlConfig.cmake /app/devel/share/my_robot_control/cmake/my_robot_controlConfig.cmake
-/app/devel/.private/my_robot_control/lib/pkgconfig/my_robot_control.pc /app/devel/lib/pkgconfig/my_robot_control.pc

@@ -1,63 +1,79 @@
-# Camera Data Collection Project
+# Pengumpulan Data dari Berbagai Sensor
 
-This project is designed to gather data from a connected camera using Docker and Docker Compose. Follow the instructions below to set up and run the project.
+## Langkah-langkah
 
-## Prerequisites
+1. **Clone Repository**
 
-Ensure the following are installed on your system:
+   Sebelum memulai, pastikan untuk memperbarui repository dengan menjalankan:
+   ```bash
+   git pull origin main
+   ```
+   atau jika belum memiliki repository, gunakan:
+   ```bash
+   git clone <URL_repository>
+   ```
 
-- **Docker**: [Install Docker](https://docs.docker.com/get-docker/).
-- **Docker Compose**: [Install Docker Compose](https://docs.docker.com/compose/install/).
-- A camera connected to your machine (ZED 2i).
+2. **Masuk ke Workspace**
+   ```bash
+   cd ~/catkin_ws
+   ```
 
-## Setup
+3. **Bersihkan Build**
+   ```bash
+   sudo rm -rf devel build
+   ```
 
-### 1. Change directory of the Repository
+4. **Jalankan Docker**
+   ```bash
+   sudo docker compose up
+   ```
 
-First, change directory in jetson:
+5. **Masuk ke Terminal Docker**
+   - Buka tab terminal baru dan jalankan:
+   ```bash
+   sudo docker exec -it zed_jetson_camera_2 /bin/bash
+   ```
+   - Pastikan menjalankan perintah ini jika ingin menjalankan perintah ROS apapun.
 
-```bash
-cd ~/catkin_ws
-```
+6. **Build Workspace di Dalam Docker**
+   ```bash
+   cd ..
+   catkin_make
+   ```
 
-### 2. Running the Project
+7. **Jalankan Launch File**
+   ```bash
+   roslaunch gather_data gather_data.launch
+   ```
 
-#### Step 1: Run the `run.bash` Script
+## Hal yang Harus Diperhatikan
 
-The `run.bash` script uses Docker Compose to launch the necessary services. Simply execute the script as follows:
+Sebelum menyalakan Jetson, pastikan untuk menyambungkan seluruh USB ke portnya masing-masing. Pastikan kabel kamera dan GPS terhubung langsung ke Jetson.
 
-```bash
-bash run.bash
-```
+Jika masih ada error saat menjalankan launch, lakukan debugging dengan cara berikut:
 
-This will start the Docker container and any other services configured in your `docker-compose.yml` file.
+1. Masuk ke direktori utilitas di terminal docker:
+   ```bash
+   cd /app/src/gather_data/src/utilx
+   ```
+   - pastikan sudah masuk terlebih dulu ke terminal docker
 
-Once the container is running, you can execute the Python script inside the Docker container to start gathering data from your camera
+2. Jalankan file Python masing-masing dengan device yang ingin dilakukan debugging. Misalnya, untuk kamera:
+   ```bash
+   python3 camera.py
+   ```
+   - pastikan sudah masuk terlebih dulu ke terminal docker
 
-#### Step 2: Run the Python Script Inside Docker
+3. Untuk sensor low-level, gunakan `rosserial` untuk debugging dengan cara:
+   ```bash
+   rosrun rosserial_python serial_node.py _port:=/dev/ttyACM1
+   ```
+   (Port tergantung pada port low-level yang disambungkan.)
+   - pastikan sudah masuk terlebih dulu ke terminal docker
+### Keterangan Tambahan
 
-Once inside the Docker container, run the following Python script to gather data from your camera:
+- IMU menggunakan port: `/dev/ttyUSB0`
+- GPS (Kumar/UBlox) menggunakan port: `/dev/ttyACM0`
+- Sensor low-level lainnya menggunakan port: `/dev/ttyACM1` hingga `/dev/ttyACM3`
 
-```bash
-roslaunch velodyne_pointcloud VLP16_points.launch
-roslaunch ublox_gps ublox_device.launch param_file_name:=zed_f9p
-
-```
-
-### 3. Stopping the Containers
-
-To stop and remove the running containers when you're done, run:
-
-```bash
-sudo docker compose down
-```
-
-This will stop and remove the containers, networks, and volumes defined in the `docker-compose.yml` file.
-
-## Troubleshooting
-
-- If you encounter issues accessing the camera from within the container, check that the camera drivers are correctly installed and accessible in the Docker container.
-
-```
-
-This version assumes that your `run.bash` script uses `docker compose` commands to manage the container lifecycle. Let me know if you need further adjustments!
+Jika ada port yang tidak terbaca, coba jalankan `docker compose up` ulang atau restart Jetson.

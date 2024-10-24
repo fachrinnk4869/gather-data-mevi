@@ -1,6 +1,0 @@
-navigation/carrot_planner
-/app/devel/.private/carrot_planner/cmake.lock /app/devel/./cmake.lock
-/app/devel/.private/carrot_planner/share/carrot_planner/cmake/carrot_plannerConfig-version.cmake /app/devel/share/carrot_planner/cmake/carrot_plannerConfig-version.cmake
-/app/devel/.private/carrot_planner/share/carrot_planner/cmake/carrot_plannerConfig.cmake /app/devel/share/carrot_planner/cmake/carrot_plannerConfig.cmake
-/app/devel/.private/carrot_planner/lib/libcarrot_planner.so /app/devel/lib/libcarrot_planner.so
-/app/devel/.private/carrot_planner/lib/pkgconfig/carrot_planner.pc /app/devel/lib/pkgconfig/carrot_planner.pc

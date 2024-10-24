@@ -1,5 +1,0 @@
-imu_odometry
-/app/devel/.private/imu_odometry/cmake.lock /app/devel/./cmake.lock
-/app/devel/.private/imu_odometry/share/imu_odometry/cmake/imu_odometryConfig-version.cmake /app/devel/share/imu_odometry/cmake/imu_odometryConfig-version.cmake
-/app/devel/.private/imu_odometry/share/imu_odometry/cmake/imu_odometryConfig.cmake /app/devel/share/imu_odometry/cmake/imu_odometryConfig.cmake
-/app/devel/.private/imu_odometry/lib/pkgconfig/imu_odometry.pc /app/devel/lib/pkgconfig/imu_odometry.pc

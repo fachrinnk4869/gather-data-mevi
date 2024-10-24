@@ -1,7 +1,0 @@
-Symlinking /app/devel/share/map_server/cmake/map_serverConfig-version.cmake
-Symlinking /app/devel/share/map_server/cmake/map_serverConfig.cmake
-Symlinking /app/devel/lib/libmap_server_image_loader.so
-Symlinking /app/devel/lib/pkgconfig/map_server.pc
-Symlinking /app/devel/lib/map_server/rtest
-Symlinking /app/devel/lib/map_server/map_saver
-Symlinking /app/devel/lib/map_server/map_server

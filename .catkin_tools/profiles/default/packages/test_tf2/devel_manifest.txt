@@ -1,5 +1,0 @@
-geometry2/test_tf2
-/app/devel/.private/test_tf2/cmake.lock /app/devel/./cmake.lock
-/app/devel/.private/test_tf2/share/test_tf2/cmake/test_tf2Config.cmake /app/devel/share/test_tf2/cmake/test_tf2Config.cmake
-/app/devel/.private/test_tf2/share/test_tf2/cmake/test_tf2Config-version.cmake /app/devel/share/test_tf2/cmake/test_tf2Config-version.cmake
-/app/devel/.private/test_tf2/lib/pkgconfig/test_tf2.pc /app/devel/lib/pkgconfig/test_tf2.pc

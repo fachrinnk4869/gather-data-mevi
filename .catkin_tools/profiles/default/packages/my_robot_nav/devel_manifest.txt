@@ -1,5 +1,0 @@
-my_robot_nav
-/app/devel/.private/my_robot_nav/cmake.lock /app/devel/./cmake.lock
-/app/devel/.private/my_robot_nav/share/my_robot_nav/cmake/my_robot_navConfig.cmake /app/devel/share/my_robot_nav/cmake/my_robot_navConfig.cmake
-/app/devel/.private/my_robot_nav/share/my_robot_nav/cmake/my_robot_navConfig-version.cmake /app/devel/share/my_robot_nav/cmake/my_robot_navConfig-version.cmake
-/app/devel/.private/my_robot_nav/lib/pkgconfig/my_robot_nav.pc /app/devel/lib/pkgconfig/my_robot_nav.pc
