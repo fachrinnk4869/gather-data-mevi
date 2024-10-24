@@ -1,36 +1,40 @@
+# Import socket module
+import socket
 import rospy
-from sensor_msgs.msg import NavSatFix
+from std_msgs.msg import Float64
 
+def main():
+    rospy.init_node('gps_publisher', anonymous=True)
+    lat_pub = rospy.Publisher('/latitude', Float64, queue_size=10)
+    lon_pub = rospy.Publisher('/longitude', Float64, queue_size=10)
+    rate = rospy.Rate(10)  # 10 Hz
 
-class GPSPublisher:
-    # class GPS publisher jangan dirubah
-    def __init__(self, pub_topic_name):
-        self.pub_topic_name = pub_topic_name
-        self.publisher = rospy.Publisher(
-            self.pub_topic_name, NavSatFix, queue_size=10)
-    # jangan dirubah
+    s = socket.socket()
+    port = 9000
+    ip_address_emlid_rover = '192.168.1.114' #'192.168.118.113'#
+    s.connect((ip_address_emlid_rover, port))
 
-    def publish_gps_data(self, lat, lon, altitude):
-        msg = NavSatFix()
-        msg.latitude = lat
-        msg.longitude = lon
-        msg.altitude = altitude
-        self.publisher.publish(msg)
-        rospy.loginfo(
-            f"Published GPS data: Lat: {lat}, Lon: {lon}, Alt: {altitude}")
-
-
-if __name__ == "__main__":
-    rospy.init_node('gps_publisher_node', anonymous=True)
-    pub_topic_name = "/latlon"  # topik jangan dirubah
-    gps_publisher = GPSPublisher(pub_topic_name)
-
-    rate = rospy.Rate(1)  # Publish at 1 Hz
     while not rospy.is_shutdown():
-        # Replace these values with actual GPS data or logic to retrieve it
-        lat = 37.7749  # Example latitude
-        lon = -122.4194  # Example longitude
-        altitude = 10.0  # Example altitude
-
-        gps_publisher.publish_gps_data(lat, lon, altitude)
+        data = s.recv(1024)
+        if len(data) < 54:  # Check if data length is sufficient
+            continue
+        try:
+            lat = float(data[26:39])
+            lon = float(data[40:54])
+        except ValueError:
+            rospy.logwarn("Received invalid data: %s", data)
+            continue
+        
+        rospy.loginfo("latitude: %f | longitude: %f" % (lat, lon))
+        lat_pub.publish(lat)
+        lon_pub.publish(lon)
         rate.sleep()
+
+    s.close()
+
+if __name__ == '__main__':
+    try:
+        main()
+    except rospy.ROSInterruptException:
+        pass
+
