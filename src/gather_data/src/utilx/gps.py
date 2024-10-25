@@ -15,13 +15,15 @@ class GPSSensor:
         rospy.loginfo(
             f"Subscribed to {self.topic_name} topic. Waiting for data...")
         return loc_sub
+    def callback(self, locsub):
+        print(locsub)
 
 
 if __name__ == "__main__":
     print("halo")
     # Test function for GPS
     rospy.init_node('gps_listener_node', anonymous=True)
-    topic_name = "latlon"  # Update this to match your gps topic
+    topic_name = "/latlon1"  # Update this to match your gps topic
     lidar_sensor = GPSSensor(topic_name)
 
     try:
@@ -32,5 +34,5 @@ if __name__ == "__main__":
     # ROS message synchronizer
     ts = message_filters.ApproximateTimeSynchronizer(
         [loc_sub], 25, 0.25)
-
+    ts.registerCallback(lidar_sensor.callback)
     rospy.spin()

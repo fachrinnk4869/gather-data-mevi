@@ -38,8 +38,8 @@ class ZEDCamera:
             self.zed.retrieve_measure(depth_map, sl.MEASURE.XYZ)
             rgb_data = rgb_image.get_data()[:, :, :3]
             depth_data = depth_map.get_data()
-            cv2.imshow("hehe", rgb_data)
-            cv2.waitKey(1)
+            # cv2.imshow("hehe", rgb_data)
+            # cv2.waitKey(1)
             return rgb_data, depth_data
         return None, None
 

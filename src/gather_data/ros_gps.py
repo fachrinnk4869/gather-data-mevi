@@ -2,17 +2,21 @@
 import socket
 import rospy
 from std_msgs.msg import Float64
+from sensor_msgs.msg import NavSatFix
 
 def main():
     rospy.init_node('gps_publisher', anonymous=True)
-    lat_pub = rospy.Publisher('/latitude', Float64, queue_size=10)
-    lon_pub = rospy.Publisher('/longitude', Float64, queue_size=10)
+    gps_pub = rospy.Publisher('/latlon1', NavSatFix, queue_size=10)
     rate = rospy.Rate(10)  # 10 Hz
 
     s = socket.socket()
     port = 9000
     ip_address_emlid_rover = '192.168.1.114' #'192.168.118.113'#
-    s.connect((ip_address_emlid_rover, port))
+    try:
+        s.connect((ip_address_emlid_rover, port))
+        print("succesfull conected")
+    except socket.error as e:
+        print("failed to connect:", e)
 
     while not rospy.is_shutdown():
         data = s.recv(1024)
@@ -25,16 +29,18 @@ def main():
             rospy.logwarn("Received invalid data: %s", data)
             continue
         
-        rospy.loginfo("latitude: %f | longitude: %f" % (lat, lon))
-        lat_pub.publish(lat)
-        lon_pub.publish(lon)
-        rate.sleep()
+        msg = NavSatFix()
+        msg.latitude = lat
+        msg.longitude = lon
+        # rospy.loginfo("latitude: %f | longitude: %f" % (lat, lon))
+        gps_pub.publish(msg)
+        rate.sleep()    
 
     s.close()
 
-if __name__ == '__main__':
-    try:
-        main()
-    except rospy.ROSInterruptException:
-        pass
+# if __name__ == '__main__':
+    # try:
+main()
+    # except rospy.ROSInterruptException:
+        # pass
 
