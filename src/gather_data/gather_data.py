@@ -22,7 +22,33 @@ rospack = rospkg.RosPack()
 package_path = rospack.get_path('gather_data')
 
 # Create directories for storing data
-datadir = os.path.join(package_path, "dataset/datasetx/")
+base_datadir = os.path.join(package_path, "dataset/")
+
+# Ensure base directory exists
+if not os.path.exists(base_datadir):
+    os.makedirs(base_datadir)
+
+# Find the latest dataset folder and increment it
+
+
+def get_next_dataset_dir():
+    # List all directories in the base data directory
+    existing_dirs = [d for d in os.listdir(
+        base_datadir) if os.path.isdir(os.path.join(base_datadir, d))]
+
+    # Filter directories that match the dataset naming convention (e.g., dataset_1, dataset_2, ...)
+    dataset_nums = [int(d.split('_')[1]) for d in existing_dirs if d.startswith(
+        "dataset_") and d.split('_')[1].isdigit()]
+
+    # Get the next dataset number
+    next_num = max(dataset_nums, default=0) + 1
+    return os.path.join(base_datadir, f"dataset_{next_num}")
+
+
+# Create the new directory
+datadir = get_next_dataset_dir()
+os.makedirs(datadir)
+print(f"Created new dataset directory: {datadir}")
 prefix = str(date.today()) + "_route01"
 dir_meta = datadir + prefix + "/meta/"
 dir_front_cam = datadir + prefix + "/camera/front/"
@@ -69,7 +95,8 @@ def callback(location, lidar_msg):
     steer = steer_sensor.get_data()
 
     # # Log metadata
-    sec = str(location.header.stamp.secs).zfill(10)
+    # sec = str(location.header.stamp.secs).zfill(10)
+    sec = str(int(time.time()))
     seq = str(location.header.seq).zfill(10)
     file_name = sec + "_" + seq
 
