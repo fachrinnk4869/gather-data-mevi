@@ -61,8 +61,8 @@ os.makedirs(dir_lidar, exist_ok=True)
 rospy.init_node('data_retriever', anonymous=True)
 # Initialize sensors
 imu = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=9600)
-camera_sensor = ZEDCamera(
-            '/zed2i/zed_node/left/image_rect_color', '/zed2i/zed_node/depth/depth_registered', '/zed2i/zed_node/pose')
+# camera_sensor = ZEDCamera('/zed2i/zed_node/left/image_rect_color', '/zed2i/zed_node/depth/depth_registered', '/zed2i/zed_node/pose')
+camera_sensor = ZEDCamera('zed/rgb_image', '/zed/depth_map', '/zed/pose')
 gps_sensor = GPSSensor('/latlon1')
 lidar_sensor = LidarSensor('/velodyne_points')
 throttle_sensor = LowLevelSensor('gas')
@@ -139,8 +139,8 @@ def callback(rgb_data, depth_data, pose_data):
 # ROS message synchronizer
 ts = message_filters.ApproximateTimeSynchronizer(
     [rgb_sub,
-        depth_sub, pose_sub], queue_size=25,
-    slop=0.25)
+        depth_sub, pose_sub], queue_size=250,
+    slop=1e12)
 ts.registerCallback(callback)
 
 rospy.spin()
