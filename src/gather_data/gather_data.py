@@ -42,7 +42,7 @@ def get_next_dataset_dir():
 
     # Get the next dataset number
     next_num = max(dataset_nums, default=0) + 1
-    return os.path.join(base_datadir, f"dataset_{next_num}")
+    return os.path.join(base_datadir, f"dataset_{next_num}/")
 
 
 # Create the new directory
@@ -61,7 +61,7 @@ os.makedirs(dir_lidar, exist_ok=True)
 rospy.init_node('data_retriever', anonymous=True)
 # Initialize sensors
 imu = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=9600)
-camera = ZEDCamera(sl.RESOLUTION.AUTO, 20,
+camera = ZEDCamera(sl.RESOLUTION.VGA,  30,
                    sl.DEPTH_MODE.ULTRA)
 gps_sensor = GPSSensor('/latlon1')
 lidar_sensor = LidarSensor('/velodyne_points')
@@ -76,14 +76,22 @@ try:
 except rospy.ROSInterruptException:
     rospy.logerr("ROS node interrupted.")
 print("--------WAIT CALIB ZEDCAM & WIT (3s)---------")
-# time.sleep(3)
-
+time.sleep(3)
+rate = rospy.Rate(10)
 
 def callback(location, lidar_msg):
     # Get camera data
     print("masuk callback")
-    rgb_data, depth_data = camera.get_frame()
-    translation, orientation = camera.get_pose()
+    camera_ready = False
+    while not camera_ready:
+        try:
+            if camera.zed.grab() == sl.ERROR_CODE.SUCCESS:
+                rgb_data, depth_data = camera.get_frame()
+                translation, orientation = camera.get_pose()
+                camera_ready = True
+        except Exception as e:
+            rospy.logwarn("Waiting for camera to be ready....")
+            time.sleep(0.1)
     rospy.loginfo(
         f"Received data...")
     # Get IMU data
@@ -128,7 +136,8 @@ def callback(location, lidar_msg):
     except Exception as e:
         rospy.logerr(f"Failed to save camera data: {str(e)}")
     lidar_sensor.save_lidar_data(lidar_msg, dir_lidar + file_name + ".pcd")
-
+    # rate.sleep()+
+    # time.sleep(0.1)
 
 # ROS message synchronizer
 ts = message_filters.ApproximateTimeSynchronizer(
