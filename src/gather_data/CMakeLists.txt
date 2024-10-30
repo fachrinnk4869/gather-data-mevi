@@ -194,6 +194,7 @@ catkin_install_python(PROGRAMS
   gather_data.py
   lidar_data.py
   ros_gps.py
+  ros_camera.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 #############

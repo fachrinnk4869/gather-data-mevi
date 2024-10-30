@@ -13,12 +13,21 @@ np.float = float
 class LidarSensor:
     def __init__(self, topic_name):
         self.topic_name = topic_name
+        self.latest_lidar_data = None
 
-    def start_listener(self):
-        lidar_sub = message_filters.Subscriber(
-            self.topic_name, PointCloud2)
-        # rospy.loginfo(f"Subscribed to {self.topic_name} topic. Waiting for data...")
-        return lidar_sub
+        # Create a ROS subscriber to listen for Lidar data
+        self.subscriber = rospy.Subscriber(
+            self.topic_name, PointCloud2, self.lidar_callback)
+
+    def lidar_callback(self, msg):
+        # Update the latest Lidar data when a new message is received
+        print(self.msg)
+        self.latest_lidar_data = msg
+
+    def get_latest_lidar_data(self):
+        # Return the latest Lidar data
+        return self.latest_lidar_data
+
     def print_saved_data(self, file_path):
         # Load the saved point cloud
         o3d_cloud = o3d.io.read_point_cloud(file_path)
@@ -30,10 +39,12 @@ class LidarSensor:
         print(f"Loaded {file_path}:")
         print(f"Number of points: {points.shape[0]}")
         print(f"Points (first 5): \n{points}")
+
     def save_lidar_data(self, point_cloud_msg, file_path):
         try:
             # Convert PointCloud2 message to numpy array using ros_numpy
-            pc_data = ros_numpy.point_cloud2.pointcloud2_to_array(point_cloud_msg)
+            pc_data = ros_numpy.point_cloud2.pointcloud2_to_array(
+                point_cloud_msg)
 
             # Extract x, y, z points and filter out invalid data (NaNs or infinities)
             points = np.zeros((pc_data.shape[0], 3), dtype=np.float32)
@@ -63,20 +74,5 @@ if __name__ == "__main__":
     rospy.init_node('lidar_listener_node', anonymous=True)
     topic_name = "/velodyne_points"  # Update this to match your Lidar point cloud topic
     lidar_sensor = LidarSensor(topic_name)
-
-
-    def callback(lidar_msg):
-        lidar_sensor.save_lidar_data(lidar_msg, ".pcd")
-
-
-    try:
-        lidar_sub = lidar_sensor.start_listener()
-    except rospy.ROSInterruptException:
-        rospy.logerr("ROS node interrupted.")
-
-    # ROS message synchronizer
-    ts = message_filters.ApproximateTimeSynchronizer(
-        [lidar_sub], 25, 0.25)
-    ts.registerCallback(callback)
 
     rospy.spin()
