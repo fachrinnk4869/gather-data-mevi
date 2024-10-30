@@ -2,6 +2,7 @@
   <!-- Launch Velodyne PointCloud -->
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
   <node pkg="gather_data" type="ros_gps.py" name="gps_data_node" output="screen" />
+  <node pkg="gather_data" type="ros_camera.py" name="zed_camera_node" output="screen" />
 
 
   <!-- Run serial_node.py for /dev/ttyACM0 -->

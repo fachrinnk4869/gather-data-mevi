@@ -61,8 +61,8 @@ os.makedirs(dir_lidar, exist_ok=True)
 rospy.init_node('data_retriever', anonymous=True)
 # Initialize sensors
 imu = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=9600)
-camera = ZEDCamera(sl.RESOLUTION.AUTO, 20,
-                   sl.DEPTH_MODE.ULTRA)
+camera_sensor = ZEDCamera(sl.RESOLUTION.VGA, 30,
+                          sl.DEPTH_MODE.PERFORMANCE)
 gps_sensor = GPSSensor('/latlon1')
 lidar_sensor = LidarSensor('/velodyne_points')
 throttle_sensor = LowLevelSensor('gas')
@@ -73,17 +73,22 @@ steer_sensor = LowLevelSensor('curra')
 try:
     lidar_sub = lidar_sensor.start_listener()
     loc_sub = gps_sensor.start_listener()
+    camera_sub = camera_sensor.start_listener()
 except rospy.ROSInterruptException:
     rospy.logerr("ROS node interrupted.")
 print("--------WAIT CALIB ZEDCAM & WIT (3s)---------")
-# time.sleep(3)
+time.sleep(3)
 
 
-def callback(location, lidar_msg):
+def callback(location, lidar_msg, rgb_data, depth_data, pose_data):
     # Get camera data
-    print("masuk callback")
-    rgb_data, depth_data = camera.get_frame()
-    translation, orientation = camera.get_pose()
+    # print("masuk callback")
+    rgb_data, depth_data = camera_sensor.get_frame(
+        rgb_data, depth_data)
+    if rgb_data is None or depth_data is None:
+        rospy.logwarn("Camera frame is missing; skipping this callback")
+        return
+    translation, orientation = camera_sensor.get_pose(pose_data)
     rospy.loginfo(
         f"Received data...")
     # Get IMU data
@@ -132,7 +137,9 @@ def callback(location, lidar_msg):
 
 # ROS message synchronizer
 ts = message_filters.ApproximateTimeSynchronizer(
-    [loc_sub, lidar_sub], 250, 1000000000000000000000)
+    [loc_sub, lidar_sub, camera_sub.rgb_sub,
+        camera_sub.depth_sub, camera_sub.pose_sub], queue_size=25,
+    slop=0.25)
 ts.registerCallback(callback)
 
 rospy.spin()
