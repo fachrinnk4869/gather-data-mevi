@@ -3,8 +3,9 @@ import numpy as np
 import cv2
 import rospy
 from sensor_msgs.msg import Image
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import PoseStamped
 from cv_bridge import CvBridge
+from std_msgs.msg import Header
 
 
 class ZEDCamera:
@@ -35,7 +36,8 @@ class ZEDCamera:
         self.rgb_pub = rospy.Publisher('/zed/rgb_image', Image, queue_size=10)
         self.depth_pub = rospy.Publisher(
             '/zed/depth_map', Image, queue_size=10)
-        self.pose_pub = rospy.Publisher('/zed/pose', Pose, queue_size=10)
+        self.pose_pub = rospy.Publisher(
+            '/zed/pose', PoseStamped, queue_size=10)
 
         self.bridge = CvBridge()
 
@@ -72,14 +74,17 @@ class ZEDCamera:
 
         # Publish Pose data
         translation, orientation = self.get_pose()
-        pose_msg = Pose()
-        pose_msg.position.x = translation[0]
-        pose_msg.position.y = translation[1]
-        pose_msg.position.z = translation[2]
-        pose_msg.orientation.x = orientation[0]
-        pose_msg.orientation.y = orientation[1]
-        pose_msg.orientation.z = orientation[2]
-        pose_msg.orientation.w = orientation[3]
+        pose_msg = PoseStamped()
+        pose_msg.header = Header()
+        pose_msg.header.stamp = rospy.Time.now()  # Set the current time
+        pose_msg.header.frame_id = "base_link"  # Change to your desired frame_id
+        pose_msg.pose.position.x = translation[0]
+        pose_msg.pose.position.y = translation[1]
+        pose_msg.pose.position.z = translation[2]
+        pose_msg.pose.orientation.x = orientation[0]
+        pose_msg.pose.orientation.y = orientation[1]
+        pose_msg.pose.orientation.z = orientation[2]
+        pose_msg.pose.orientation.w = orientation[3]
         self.pose_pub.publish(pose_msg)
 
 
