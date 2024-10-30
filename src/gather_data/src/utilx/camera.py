@@ -2,7 +2,7 @@
 
 import rospy
 from sensor_msgs.msg import Image, PointCloud2
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import PoseStamped
 from cv_bridge import CvBridge
 import message_filters
 import cv2
@@ -11,7 +11,6 @@ import cv2
 class ZEDCamera:
     def __init__(self, topic_name_rgb, topic_name_depth, topic_name_pose):
         # Initialize the ROS node
-        rospy.init_node('zed_subscriber', anonymous=True)
 
         # Create a CvBridge object
         self.bridge = CvBridge()
@@ -26,7 +25,7 @@ class ZEDCamera:
         rgb_sub = message_filters.Subscriber(self.topic_name_rgb, Image)
         depth_sub = message_filters.Subscriber(self.topic_name_depth, Image)
         pose_sub = message_filters.Subscriber(
-            self.topic_name_pose, Pose)
+            self.topic_name_pose, PoseStamped)
 
         rospy.loginfo(
             f"Subscribed to {self.topic_name_rgb}, {self.topic_name_depth}, and {self.topic_name_pose} topics. Waiting for data...")
@@ -39,7 +38,7 @@ class ZEDCamera:
         return rgb_image, depth_image
 
     def get_pose(self, pose_msg):
-        return pose_msg.translation, pose_msg.orientation
+        return pose_msg.pose.position, pose_msg.pose.orientation
 
     def run(self):
         self.start_listener()
@@ -47,6 +46,7 @@ class ZEDCamera:
 
 
 if __name__ == '__main__':
+        # rospy.init_node('zed_subscriber', anonymous=True)
     try:
         zed_subscriber = ZEDCamera(
             rgb_topic='/zed/rgb_image', depth_topic='/zed/dept_map', pose_topic='/zed/pose')

@@ -16,7 +16,7 @@ class ZEDCamera:
         init_params.depth_mode = depth_mode
         init_params.coordinate_units = sl.UNIT.METER
         init_params.coordinate_system = sl.COORDINATE_SYSTEM.RIGHT_HANDED_Z_UP_X_FWD
-        init_params.depth_minimum_distance = 0.15
+        init_params.depth_minimum_distance = 0.3
         init_params.depth_maximum_distance = 40
         err = self.zed.open(init_params)
 
@@ -86,7 +86,7 @@ class ZEDCamera:
 # Main loop to publish data
 if __name__ == "__main__":
     rospy.init_node('zed_camera_node', anonymous=True)
-    zed_camera = ZEDCamera(sl.RESOLUTION.AUTO, 20, sl.DEPTH_MODE.ULTRA)
+    zed_camera = ZEDCamera(sl.RESOLUTION.VGA, 30, sl.DEPTH_MODE.ULTRA)
     rate = rospy.Rate(10)  # Set the publishing rate (10 Hz)
 
     while not rospy.is_shutdown():

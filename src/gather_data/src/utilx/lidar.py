@@ -21,7 +21,7 @@ class LidarSensor:
 
     def lidar_callback(self, msg):
         # Update the latest Lidar data when a new message is received
-        print(self.msg)
+        # print(msg)
         self.latest_lidar_data = msg
 
     def get_latest_lidar_data(self):

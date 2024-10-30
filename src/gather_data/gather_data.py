@@ -61,8 +61,8 @@ os.makedirs(dir_lidar, exist_ok=True)
 rospy.init_node('data_retriever', anonymous=True)
 # Initialize sensors
 imu = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=9600)
-camera_sensor = ZEDCamera(sl.RESOLUTION.VGA, 30,
-                          sl.DEPTH_MODE.PERFORMANCE)
+camera_sensor = ZEDCamera(
+            '/zed2i/zed_node/left/image_rect_color', '/zed2i/zed_node/depth/depth_registered', '/zed2i/zed_node/pose')
 gps_sensor = GPSSensor('/latlon1')
 lidar_sensor = LidarSensor('/velodyne_points')
 throttle_sensor = LowLevelSensor('gas')
@@ -71,7 +71,7 @@ vel_kanan_sensor = LowLevelSensor('/encoder2_value')
 steer_sensor = LowLevelSensor('curra')
 
 try:
-    camera_sub = camera_sensor.start_listener()
+    rgb_sub, depth_sub, pose_sub = camera_sensor.start_listener()
 except rospy.ROSInterruptException:
     rospy.logerr("ROS node interrupted.")
 print("--------WAIT CALIB ZEDCAM & WIT (3s)---------")
@@ -80,17 +80,12 @@ time.sleep(3)
 
 def callback(rgb_data, depth_data, pose_data):
     # Get camera data
-    print("masuk callback")
-    camera_ready = False
-    while not camera_ready:
-        try:
-            if camera.zed.grab() == sl.ERROR_CODE.SUCCESS:
-                rgb_data, depth_data = camera.get_frame()
-                translation, orientation = camera.get_pose()
-                camera_ready = True
-        except Exception as e:
-            rospy.logwarn("Waiting for camera to be ready....")
-            time.sleep(0.1)
+    rgb_data, depth_data = camera_sensor.get_frame(
+        rgb_data, depth_data)
+    if rgb_data is None or depth_data is None:
+        rospy.logwarn("Camera frame is missing; skipping this callback")
+        return
+    translation, orientation = camera_sensor.get_pose(pose_data)
     rospy.loginfo(
         f"Received data...")
     # Get IMU data
@@ -143,8 +138,8 @@ def callback(rgb_data, depth_data, pose_data):
 
 # ROS message synchronizer
 ts = message_filters.ApproximateTimeSynchronizer(
-    [camera_sub.rgb_sub,
-        camera_sub.depth_sub, camera_sub.pose_sub], queue_size=25,
+    [rgb_sub,
+        depth_sub, pose_sub], queue_size=25,
     slop=0.25)
 ts.registerCallback(callback)
 
