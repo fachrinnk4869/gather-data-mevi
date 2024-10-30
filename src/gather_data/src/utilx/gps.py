@@ -9,14 +9,16 @@ np.float = float
 class GPSSensor:
     def __init__(self, topic_name):
         self.topic_name = topic_name
+        self.latest_gps_data = None
+        rospy.Subscriber(self.topic_name, NavSatFix, self.gps_callback)
 
-    def start_listener(self):
-        loc_sub = message_filters.Subscriber(self.topic_name, NavSatFix)
-        rospy.loginfo(
-            f"Subscribed to {self.topic_name} topic. Waiting for data...")
-        return loc_sub
-    def callback(self, locsub):
-        print(locsub)
+    def gps_callback(self, msg):
+        # Update the latest Gps data when a new message is received
+        self.latest_gps_data = msg
+
+    def get_latest_gps_data(self):
+        # Return the latest Gps data
+        return self.latest_gps_data
 
 
 if __name__ == "__main__":
@@ -25,14 +27,4 @@ if __name__ == "__main__":
     rospy.init_node('gps_listener_node', anonymous=True)
     topic_name = "/latlon1"  # Update this to match your gps topic
     lidar_sensor = GPSSensor(topic_name)
-
-    try:
-        loc_sub = lidar_sensor.start_listener()
-    except rospy.ROSInterruptException:
-        rospy.logerr("ROS node interrupted.")
-
-    # ROS message synchronizer
-    ts = message_filters.ApproximateTimeSynchronizer(
-        [loc_sub], 25, 0.25)
-    ts.registerCallback(lidar_sensor.callback)
     rospy.spin()

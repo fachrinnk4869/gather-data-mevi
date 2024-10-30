@@ -13,11 +13,6 @@ np.float = float
 class LidarSensor:
     def __init__(self, topic_name):
         self.topic_name = topic_name
-
-
-class LidarSensor:
-    def __init__(self, topic_name):
-        self.topic_name = topic_name
         self.latest_lidar_data = None
 
         # Create a ROS subscriber to listen for Lidar data
@@ -26,6 +21,7 @@ class LidarSensor:
 
     def lidar_callback(self, msg):
         # Update the latest Lidar data when a new message is received
+        print(self.msg)
         self.latest_lidar_data = msg
 
     def get_latest_lidar_data(self):
@@ -78,18 +74,5 @@ if __name__ == "__main__":
     rospy.init_node('lidar_listener_node', anonymous=True)
     topic_name = "/velodyne_points"  # Update this to match your Lidar point cloud topic
     lidar_sensor = LidarSensor(topic_name)
-
-    def callback(lidar_msg):
-        lidar_sensor.save_lidar_data(lidar_msg, ".pcd")
-
-    try:
-        lidar_sub = lidar_sensor.start_listener()
-    except rospy.ROSInterruptException:
-        rospy.logerr("ROS node interrupted.")
-
-    # ROS message synchronizer
-    ts = message_filters.ApproximateTimeSynchronizer(
-        [lidar_sub], 25, 0.25)
-    ts.registerCallback(callback)
 
     rospy.spin()

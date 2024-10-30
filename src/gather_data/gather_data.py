@@ -71,7 +71,6 @@ vel_kanan_sensor = LowLevelSensor('/encoder2_value')
 steer_sensor = LowLevelSensor('curra')
 
 try:
-    loc_sub = gps_sensor.start_listener()
     camera_sub = camera_sensor.start_listener()
 except rospy.ROSInterruptException:
     rospy.logerr("ROS node interrupted.")
@@ -79,7 +78,7 @@ print("--------WAIT CALIB ZEDCAM & WIT (3s)---------")
 time.sleep(3)
 
 
-def callback(location, rgb_data, depth_data, pose_data):
+def callback(rgb_data, depth_data, pose_data):
     # Get camera data
     # print("masuk callback")
     rgb_data, depth_data = camera_sensor.get_frame(
@@ -94,6 +93,7 @@ def callback(location, rgb_data, depth_data, pose_data):
     imu_data = imu.get_imu_data()
     # Get the latest LIDAR data
     lidar_msg = lidar_sensor.get_latest_lidar_data()
+    location = gps_sensor.get_latest_gps_data()
 
     throttle = throttle_sensor.get_data()
     vel_kiri = vel_kiri_sensor.get_data()
@@ -138,7 +138,7 @@ def callback(location, rgb_data, depth_data, pose_data):
 
 # ROS message synchronizer
 ts = message_filters.ApproximateTimeSynchronizer(
-    [loc_sub, camera_sub.rgb_sub,
+    [camera_sub.rgb_sub,
         camera_sub.depth_sub, camera_sub.pose_sub], queue_size=25,
     slop=0.25)
 ts.registerCallback(callback)
