@@ -10,7 +10,6 @@ import cv2
 class ZEDCamera:
     def __init__(self, rgb_topic, depth_topic, pose_topic):
         # Initialize the ROS node
-        rospy.init_node('zed_subscriber', anonymous=True)
 
         # Create a CvBridge object
         self.bridge = CvBridge()
@@ -35,7 +34,7 @@ class ZEDCamera:
         # Convert RGB Image message to OpenCV format and store it
         try:
             self.rgb_image = self.bridge.imgmsg_to_cv2(rgb_msg, "bgr8")
-            rospy.loginfo("Received RGB image data.")
+            # rospy.loginfo("Received RGB image data.")
         except Exception as e:
             rospy.logerr(f"Failed to process RGB image: {e}")
 
@@ -43,7 +42,7 @@ class ZEDCamera:
         # Convert Depth Image message to OpenCV format and store it
         try:
             self.depth_image = self.bridge.imgmsg_to_cv2(depth_msg, "32FC1")
-            rospy.loginfo("Received Depth image data.")
+            # rospy.loginfo("Received Depth image data.")
         except Exception as e:
             rospy.logerr(f"Failed to process Depth image: {e}")
 
@@ -51,7 +50,7 @@ class ZEDCamera:
         # Store PoseStamped message's position and orientation
         self.pose_position = pose_msg.pose.position
         self.pose_orientation = pose_msg.pose.orientation
-        rospy.loginfo("Received Pose data.")
+        # rospy.loginfo("Received Pose data.")
 
     def get_frame(self):
         # Retrieve the latest RGB and Depth images if available
@@ -76,6 +75,7 @@ class ZEDCamera:
 
 
 if __name__ == '__main__':
+    rospy.init_node('zed_subscriber', anonymous=True)
     try:
         zed_subscriber = ZEDCamera(
             rgb_topic='/zed/rgb_image', depth_topic='/zed/depth_map', pose_topic='/zed/pose')
