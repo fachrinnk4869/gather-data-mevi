@@ -9,14 +9,18 @@ def main():
     gps_pub = rospy.Publisher('/latlon1', NavSatFix, queue_size=10)
     rate = rospy.Rate(10)  # 10 Hz
 
+    # try:
     s = socket.socket()
-    port = 9000
-    ip_address_emlid_rover = '192.168.1.114' #'192.168.118.113'#
+    s.settimeout(5)   # 5 seconds
     try:
+        port = 9000
+        ip_address_emlid_rover = '192.168.1.114' #'192.168.118.113'#
         s.connect((ip_address_emlid_rover, port))
-        print("succesfull conected")
-    except socket.error as e:
-        print("failed to connect:", e)
+    except socket.error as exc:
+        print ("Caught exception socket.error : %s" % exc)
+    # print("succesfull conected")
+    # except Exception as e:
+        # print("failed to connect:", e)
 
     while not rospy.is_shutdown():
         data = s.recv(1024)
@@ -30,6 +34,9 @@ def main():
             continue
         
         msg = NavSatFix()
+        # Replace these values with actual GPS data or logic to retrieve it
+        # lat = 37.7749  # Example latitude
+        # lon = -122.4194  # Example longitude
         msg.latitude = lat
         msg.longitude = lon
         # rospy.loginfo("latitude: %f | longitude: %f" % (lat, lon))

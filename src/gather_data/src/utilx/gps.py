@@ -15,6 +15,7 @@ class GPSSensor:
         rospy.loginfo(
             f"Subscribed to {self.topic_name} topic. Waiting for data...")
         return loc_sub
+
     def callback(self, locsub):
         print(locsub)
 

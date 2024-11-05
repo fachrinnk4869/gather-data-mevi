@@ -1,69 +1,84 @@
-# camera_module.py
-import pyzed.sl as sl
-import numpy as np
+#!/usr/bin/env python
+
+import rospy
+from sensor_msgs.msg import Image
+from geometry_msgs.msg import PoseStamped
+from cv_bridge import CvBridge
 import cv2
 
 
 class ZEDCamera:
-    def __init__(self, resolution, fps, depth_mode):
-        self.zed = sl.Camera()
-        init_params = sl.InitParameters()
-        init_params.camera_resolution = resolution
-        init_params.camera_fps = fps
-        init_params.depth_mode = depth_mode
-        init_params.coordinate_units = sl.UNIT.METER
-        init_params.coordinate_system = sl.COORDINATE_SYSTEM.RIGHT_HANDED_Z_UP_X_FWD  #https://www.stereolabs.com/docs/positional-tracking/using-tracking/
-        init_params.depth_minimum_distance = 0.3
-        init_params.depth_maximum_distance = 40
-        # init_params.set_from_serial_number(serial_number) # check serial number
-        err = self.zed.open(init_params)
+    def __init__(self, rgb_topic, depth_topic, pose_topic):
+        # Initialize the ROS node
 
-        if err != sl.ERROR_CODE.SUCCESS:
-            print("Error opening ZED camera:", repr(err))
-            self.zed.close()
-            exit(1)
+        # Create a CvBridge object
+        self.bridge = CvBridge()
 
-        self.runtime_params = sl.RuntimeParameters()
-        self.frame_size = (1280, 720)
-        self.pose = sl.Pose()
-        tracking_parameters2i = sl.PositionalTrackingParameters()
-        track_err2i = self.zed.enable_positional_tracking(tracking_parameters2i)
+        # Store topic names
+        self.rgb_topic = rgb_topic
+        self.depth_topic = depth_topic
+        self.pose_topic = pose_topic
+
+        # Initialize placeholders for RGB, depth, and pose data
+        self.rgb_image = None
+        self.depth_image = None
+        self.pose_position = None
+        self.pose_orientation = None
+
+        # Set up subscribers with individual callbacks
+        rospy.Subscriber(self.rgb_topic, Image, self.rgb_callback)
+        rospy.Subscriber(self.depth_topic, Image, self.depth_callback)
+        rospy.Subscriber(self.pose_topic, PoseStamped, self.pose_callback)
+
+    def rgb_callback(self, rgb_msg):
+        # Convert RGB Image message to OpenCV format and store it
+        try:
+            self.rgb_image = self.bridge.imgmsg_to_cv2(rgb_msg, "bgr8")
+            # rospy.loginfo("Received RGB image data.")
+        except Exception as e:
+            rospy.logerr(f"Failed to process RGB image: {e}")
+
+    def depth_callback(self, depth_msg):
+        # Convert Depth Image message to OpenCV format and store it
+        try:
+            self.depth_image = self.bridge.imgmsg_to_cv2(depth_msg, "32FC1")
+            # rospy.loginfo("Received Depth image data.")
+        except Exception as e:
+            rospy.logerr(f"Failed to process Depth image: {e}")
+
+    def pose_callback(self, pose_msg):
+        # Store PoseStamped message's position and orientation
+        self.pose_position = pose_msg.pose.position
+        self.pose_orientation = pose_msg.pose.orientation
+        # rospy.loginfo("Received Pose data.")
 
     def get_frame(self):
-        rgb_image = sl.Mat(self.frame_size[0], self.frame_size[1])
-        depth_map = sl.Mat(self.frame_size[0], self.frame_size[1])
-
-        if self.zed.grab(self.runtime_params) == sl.ERROR_CODE.SUCCESS:
-            self.zed.retrieve_image(rgb_image, sl.VIEW.LEFT)
-            self.zed.retrieve_measure(depth_map, sl.MEASURE.XYZ)
-            rgb_data = rgb_image.get_data()[:, :, :3]
-            depth_data = depth_map.get_data()
-            # cv2.imshow("hehe", rgb_data)
-            # cv2.waitKey(1)
-            return rgb_data, depth_data
-        return None, None
+        # Retrieve the latest RGB and Depth images if available
+        if self.rgb_image is not None and self.depth_image is not None:
+            return self.rgb_image, self.depth_image
+        else:
+            rospy.logwarn("RGB or Depth image not available yet.")
+            return None, None
 
     def get_pose(self):
-        
-        self.zed.get_position(self.pose)
-        translation = np.array(self.pose.get_translation(sl.Translation()).get()).tolist()
-        orientation = np.array(self.pose.get_orientation(sl.Orientation()).get()).tolist()
-        return translation, orientation
+        # Retrieve the latest pose data if available
+        if self.pose_position is not None and self.pose_orientation is not None:
+            return self.pose_position, self.pose_orientation
+        else:
+            rospy.logwarn("Pose data not available yet.")
+            return None, None
 
-# Test function for ZED Camera
-if __name__ == "__main__":
-    zed_camera = ZEDCamera(sl.RESOLUTION.AUTO, 60,
-                           sl.DEPTH_MODE.ULTRA)
+    def run(self):
+        # Spin to keep the node alive and allow callback processing
+        rospy.loginfo("ZED Camera Subscriber is running. Waiting for data...")
+        rospy.spin()
 
-    # Retrieve frame data
-    while True:
-        rgb_data, depth_data = zed_camera.get_frame()
-        if rgb_data is not None:
-            print("Camera RGB Data Retrieved!")
-            cv2.imwrite("test_rgb_image.png", rgb_data)
 
-        # Retrieve pose data
-        translation, orientation = zed_camera.get_pose()
-        if translation is not None:
-            print("Camera Pose - Translation:", translation)
-            print("Camera Pose - Orientation:", orientation)
+if __name__ == '__main__':
+    rospy.init_node('zed_subscriber', anonymous=True)
+    try:
+        zed_subscriber = ZEDCamera(
+            rgb_topic='/zed/rgb_image', depth_topic='/zed/depth_map', pose_topic='/zed/pose')
+        zed_subscriber.run()
+    except rospy.ROSInterruptException:
+        pass

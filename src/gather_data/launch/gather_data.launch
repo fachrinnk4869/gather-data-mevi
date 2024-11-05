@@ -2,7 +2,11 @@
   <!-- Launch Velodyne PointCloud -->
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
   <node pkg="gather_data" type="ros_gps.py" name="gps_data_node" output="screen" />
-
+  <node pkg="gather_data" type="ros_camera.py" name="camera_data_node" output="screen" />
+  <node pkg="image_view" type="image_view" name="image_view" output="screen">
+        <param name="image_topic" value="/zed/rgb_image"/>
+    </node>
+  <!-- <include file="$(find zed_wrapper)/launch/zed2i.launch"/> -->
 
   <!-- Run serial_node.py for /dev/ttyACM0 -->
   <node pkg="rosserial_python" type="serial_node.py" name="serial_node_acm0" output="screen">
@@ -20,6 +24,7 @@
   <!-- Run gather_data.py -->
   <node pkg="gather_data" type="gather_data.py" name="gather_data_node" output="screen" />
   <!-- Launch rqt and load the saved perspective -->
+
   <node pkg="rqt_gui" type="rqt_gui" name="rqt_with_perspective" output="screen" args="--perspective-file $(find gather_data)/perspectives/low_level.perspective" />
 
   <node pkg="rviz" type="rviz" name="rviz_node" output="screen" args="-f velodyne -d $(find gather_data)/rviz/lidar_visual.rviz" />

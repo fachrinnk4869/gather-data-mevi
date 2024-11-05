@@ -42,7 +42,7 @@ def get_next_dataset_dir():
 
     # Get the next dataset number
     next_num = max(dataset_nums, default=0) + 1
-    return os.path.join(base_datadir, f"dataset_{next_num}")
+    return os.path.join(base_datadir, f"dataset_{next_num}/")
 
 
 # Create the new directory
@@ -61,8 +61,8 @@ os.makedirs(dir_lidar, exist_ok=True)
 rospy.init_node('data_retriever', anonymous=True)
 # Initialize sensors
 imu = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=9600)
-camera = ZEDCamera(sl.RESOLUTION.AUTO, 20,
-                   sl.DEPTH_MODE.ULTRA)
+# camera_sensor = ZEDCamera('/zed2i/zed_node/left/image_rect_color', '/zed2i/zed_node/depth/depth_registered', '/zed2i/zed_node/pose')
+camera_sensor = ZEDCamera('zed/rgb_image', '/zed/depth_map', '/zed/pose')
 gps_sensor = GPSSensor('/latlon1')
 lidar_sensor = LidarSensor('/velodyne_points')
 throttle_sensor = LowLevelSensor('gas')
@@ -76,19 +76,20 @@ try:
 except rospy.ROSInterruptException:
     rospy.logerr("ROS node interrupted.")
 print("--------WAIT CALIB ZEDCAM & WIT (3s)---------")
-# time.sleep(3)
+time.sleep(3)
 
 
 def callback(location, lidar_msg):
     # Get camera data
-    print("masuk callback")
-    rgb_data, depth_data = camera.get_frame()
-    translation, orientation = camera.get_pose()
+    rgb_data, depth_data = camera_sensor.get_frame()
+    if rgb_data is None or depth_data is None:
+        rospy.logwarn("Camera frame is missing; skipping this callback")
+        return
+    translation, orientation = camera_sensor.get_pose()
     rospy.loginfo(
         f"Received data...")
     # Get IMU data
     imu_data = imu.get_imu_data()
-
     throttle = throttle_sensor.get_data()
     vel_kiri = vel_kiri_sensor.get_data()
     vel_kanan = vel_kanan_sensor.get_data()
@@ -128,11 +129,14 @@ def callback(location, lidar_msg):
     except Exception as e:
         rospy.logerr(f"Failed to save camera data: {str(e)}")
     lidar_sensor.save_lidar_data(lidar_msg, dir_lidar + file_name + ".pcd")
+    # rate.sleep()+
+    # time.sleep(0.1)
 
 
 # ROS message synchronizer
 ts = message_filters.ApproximateTimeSynchronizer(
-    [loc_sub, lidar_sub], 250, 1000000000000000000000)
+    [loc_sub, lidar_sub], queue_size=500,
+    slop=1e20)
 ts.registerCallback(callback)
 
 rospy.spin()
