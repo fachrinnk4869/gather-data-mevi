@@ -40,7 +40,8 @@ class LidarSensor:
             # pointcloud2
             # baca: https://github.com/PRBonn/lidar-bonnetal/issues/78
             lid_pc = pypcd.PointCloud.from_msg(point_cloud_msg)
-            lid_pc.save_pcd(file_path+".pcd", compression='binary_compressed')
+            lid_pc.save(file_path)
+            print("save lidar data succesful")
 
         except Exception as e:
             rospy.logerr(f"Failed to save Lidar : {str(e)}")

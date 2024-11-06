@@ -2,7 +2,8 @@ import pyzed.sl as sl
 import numpy as np
 import cv2
 import rospy
-from sensor_msgs.msg import Image, Float32MultiArray
+from std_msgs.msg import Float32MultiArray
+from sensor_msgs.msg import Image
 from geometry_msgs.msg import PoseStamped
 from cv_bridge import CvBridge
 from std_msgs.msg import Header
@@ -35,7 +36,7 @@ class ZEDCamera:
         # ROS Publishers
         self.rgb_pub = rospy.Publisher('/zed/rgb_image', Image, queue_size=10)
         self.depth_pub = rospy.Publisher(
-            '/zed/depth_map', Float32MultiArray, queue_size=10)
+            '/zed/depth_map', Image, queue_size=10)
         self.pose_pub = rospy.Publisher(
             '/zed/pose', PoseStamped, queue_size=10)
 
@@ -46,10 +47,11 @@ class ZEDCamera:
         depth_map = sl.Mat(self.frame_size[0], self.frame_size[1])
 
         if self.zed.grab(self.runtime_params) == sl.ERROR_CODE.SUCCESS:
-            self.zed.retrieve_image(rgb_image, sl.VIEW.LEFT)
-            self.zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)
+            self.zed.retrieve_image(rgb_image, sl.VIEW.LEFT, sl.MEM.CPU)
+            self.zed.retrieve_measure(depth_map, sl.MEASURE.XYZ, sl.MEM.CPU)
             rgb_data = rgb_image.get_data()[:, :, :3]
             depth_data = depth_map.get_data()
+            # print(depth_data.shape)
             return rgb_data, depth_data
         return None, None
 
@@ -69,8 +71,9 @@ class ZEDCamera:
             self.rgb_pub.publish(rgb_msg)
 
             # Publish depth map (convert depth to uint8 for visualization, if needed)
-            depth_msg = self.bridge.cv2_to_imgmsg(depth_data, encoding="32FC1")
+            depth_msg = self.bridge.cv2_to_imgmsg(depth_data, encoding="32FC4")
             self.depth_pub.publish(depth_msg)
+            
 
         # Publish Pose data
         translation, orientation = self.get_pose()

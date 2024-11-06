@@ -8,13 +8,12 @@ class TestSensor(unittest.TestCase):
     def setUp(self):
 
         # Path to an existing .pcd file to test (ensure this path is valid)
-        self.lidar_file = "lidar.pcd"
+        self.lidar_file = "./lidar.pcd"
 
         # Replace this with the directory and file name for your test
         self.file_path = "depth_camera.npy"
 
         # Load the point cloud data
-        self.pt_cloudx = np.load(self.file_path)
 
     def test_lidar_data(self):
         # Check if the test PCD file exists
@@ -44,6 +43,7 @@ class TestSensor(unittest.TestCase):
             self.fail(f"An error occurred during the test: {str(e)}")
 
     def test_point_cloud_shape(self):
+        self.pt_cloudx = np.load(self.file_path)
         # Print the original shape of the point cloud
         print("Original shape:", self.pt_cloudx.shape)
 
