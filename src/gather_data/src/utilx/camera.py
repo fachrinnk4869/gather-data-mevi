@@ -44,7 +44,7 @@ class ZEDCamera:
         # Convert Depth Image message to OpenCV format and store it
         try:
             self.depth_image = self.bridge.imgmsg_to_cv2(depth_msg, "32FC4")
-            np.save("./unittest/depth_camera.npy", self.depth_image)
+            # np.save("./unittest/depth_camera.npy", self.depth_image)
             # rospy.loginfo("Received Depth image data.")
         except Exception as e:
             rospy.logerr(f"Failed to process Depth image: {e}")

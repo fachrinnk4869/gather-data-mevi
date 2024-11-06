@@ -9,7 +9,6 @@ def main():
     gps_pub = rospy.Publisher('/latlon1', NavSatFix, queue_size=10)
     rate = rospy.Rate(10)  # 10 Hz
 
-    # try:
     s = socket.socket()
     s.settimeout(5)   # 5 seconds
     try:
@@ -18,9 +17,6 @@ def main():
         s.connect((ip_address_emlid_rover, port))
     except socket.error as exc:
         print ("Caught exception socket.error : %s" % exc)
-    # print("succesfull conected")
-    # except Exception as e:
-        # print("failed to connect:", e)
 
     while not rospy.is_shutdown():
         data = s.recv(1024)
