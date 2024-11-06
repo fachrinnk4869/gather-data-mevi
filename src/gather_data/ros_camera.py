@@ -2,7 +2,7 @@ import pyzed.sl as sl
 import numpy as np
 import cv2
 import rospy
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import Image, Float32MultiArray
 from geometry_msgs.msg import PoseStamped
 from cv_bridge import CvBridge
 from std_msgs.msg import Header
@@ -35,7 +35,7 @@ class ZEDCamera:
         # ROS Publishers
         self.rgb_pub = rospy.Publisher('/zed/rgb_image', Image, queue_size=10)
         self.depth_pub = rospy.Publisher(
-            '/zed/depth_map', Image, queue_size=10)
+            '/zed/depth_map', Float32MultiArray, queue_size=10)
         self.pose_pub = rospy.Publisher(
             '/zed/pose', PoseStamped, queue_size=10)
 

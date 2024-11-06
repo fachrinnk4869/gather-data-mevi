@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 import rospy
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import Image, Float32MultiArray
 from geometry_msgs.msg import PoseStamped
 from cv_bridge import CvBridge
 import cv2
+import numpy as np
 
 
 class ZEDCamera:
@@ -27,7 +28,8 @@ class ZEDCamera:
 
         # Set up subscribers with individual callbacks
         rospy.Subscriber(self.rgb_topic, Image, self.rgb_callback)
-        rospy.Subscriber(self.depth_topic, Image, self.depth_callback)
+        rospy.Subscriber(self.depth_topic, Float32MultiArray,
+                         self.depth_callback)
         rospy.Subscriber(self.pose_topic, PoseStamped, self.pose_callback)
 
     def rgb_callback(self, rgb_msg):
@@ -42,6 +44,7 @@ class ZEDCamera:
         # Convert Depth Image message to OpenCV format and store it
         try:
             self.depth_image = self.bridge.imgmsg_to_cv2(depth_msg, "32FC1")
+            np.save("./unittest/depth_camera.npy", self.depth_image)
             # rospy.loginfo("Received Depth image data.")
         except Exception as e:
             rospy.logerr(f"Failed to process Depth image: {e}")
