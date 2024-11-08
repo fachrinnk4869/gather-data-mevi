@@ -10,7 +10,8 @@ from datetime import date
 import os
 import rospkg
 from utilx.imu import IMUSensor
-from utilx.camera import ZEDCamera
+from utilx.camera import ZEDCameraSubscriber
+from ros_camera import ZEDDepthGetter
 from utilx.lidar import LidarSensor
 from utilx.gps import GPSSensor
 from utilx.low_level import LowLevelSensor
@@ -61,8 +62,9 @@ os.makedirs(dir_lidar, exist_ok=True)
 rospy.init_node('data_retriever', anonymous=True)
 # Initialize sensors
 imu = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=9600)
-# camera_sensor = ZEDCamera('/zed2i/zed_node/left/image_rect_color', '/zed2i/zed_node/depth/depth_registered', '/zed2i/zed_node/pose')
-camera_sensor = ZEDCamera('zed/rgb_image', '/zed/depth_map', '/zed/pose')
+# camera_rgb_sensor = ZEDCamera('/zed2i/zed_node/left/image_rect_color', '/zed2i/zed_node/depth/depth_registered', '/zed2i/zed_node/pose')
+camera_rgb_sensor = ZEDCameraSubscriber('zed/rgb_image',  '/zed/pose')
+camera_depth_sensor = ZEDDepthGetter()
 gps_sensor = GPSSensor('/latlon1')
 lidar_sensor = LidarSensor('/velodyne_points')
 throttle_sensor = LowLevelSensor('gas')
@@ -81,11 +83,12 @@ time.sleep(3)
 
 def callback(location, lidar_msg):
     # Get camera data
-    rgb_data, depth_data = camera_sensor.get_frame()
+    rgb_data = camera_rgb_sensor.get_frame()
+    depth_data = camera_depth_sensor.get_depth()
     if rgb_data is None or depth_data is None:
         rospy.logwarn("Camera frame is missing; skipping this callback")
         return
-    translation, orientation = camera_sensor.get_pose()
+    translation, orientation = camera_rgb_sensor.get_pose()
     rospy.loginfo(
         f"Received data...")
     # Get IMU data
