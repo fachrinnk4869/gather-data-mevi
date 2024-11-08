@@ -12,7 +12,8 @@ class ZEDCamera:
         init_params.camera_fps = fps
         init_params.depth_mode = depth_mode
         init_params.coordinate_units = sl.UNIT.METER
-        init_params.coordinate_system = sl.COORDINATE_SYSTEM.RIGHT_HANDED_Z_UP_X_FWD  #https://www.stereolabs.com/docs/positional-tracking/using-tracking/
+        # https://www.stereolabs.com/docs/positional-tracking/using-tracking/
+        init_params.coordinate_system = sl.COORDINATE_SYSTEM.RIGHT_HANDED_Z_UP_X_FWD
         init_params.depth_minimum_distance = 0.3
         init_params.depth_maximum_distance = 40
         # init_params.set_from_serial_number(serial_number) # check serial number
@@ -27,28 +28,33 @@ class ZEDCamera:
         self.frame_size = (1280, 720)
         self.pose = sl.Pose()
         tracking_parameters2i = sl.PositionalTrackingParameters()
-        track_err2i = self.zed.enable_positional_tracking(tracking_parameters2i)
+        track_err2i = self.zed.enable_positional_tracking(
+            tracking_parameters2i)
 
     def get_frame(self):
         rgb_image = sl.Mat(self.frame_size[0], self.frame_size[1])
         depth_map = sl.Mat(self.frame_size[0], self.frame_size[1])
 
         if self.zed.grab(self.runtime_params) == sl.ERROR_CODE.SUCCESS:
-            self.zed.retrieve_image(rgb_image, sl.VIEW.LEFT)
-            self.zed.retrieve_measure(depth_map, sl.MEASURE.XYZ)
+            self.zed.retrieve_image(rgb_image, sl.VIEW.LEFT, sl.MEM.CPU)
+            self.zed.retrieve_measure(depth_map, sl.MEASURE.XYZ, sl.MEM.CPU)
             rgb_data = rgb_image.get_data()[:, :, :3]
             depth_data = depth_map.get_data()
+            np.save("./unittest/depth_camera.npy", depth_data)
             # cv2.imshow("hehe", rgb_data)
             # cv2.waitKey(1)
             return rgb_data, depth_data
         return None, None
 
     def get_pose(self):
-        
+
         self.zed.get_position(self.pose)
-        translation = np.array(self.pose.get_translation(sl.Translation()).get()).tolist()
-        orientation = np.array(self.pose.get_orientation(sl.Orientation()).get()).tolist()
+        translation = np.array(self.pose.get_translation(
+            sl.Translation()).get()).tolist()
+        orientation = np.array(self.pose.get_orientation(
+            sl.Orientation()).get()).tolist()
         return translation, orientation
+
 
 # Test function for ZED Camera
 if __name__ == "__main__":

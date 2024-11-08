@@ -52,7 +52,7 @@ print(f"Created new dataset directory: {datadir}")
 prefix = str(date.today()) + "_route01"
 dir_meta = datadir + prefix + "/meta/"
 dir_front_cam = datadir + prefix + "/camera/front/"
-dir_lidar = datadir + prefix + "/lidar/"
+dir_lidar = datadir + prefix + "/lidar/cld"
 os.makedirs(dir_meta, exist_ok=True)
 os.makedirs(dir_front_cam + "rgb", exist_ok=True)
 os.makedirs(dir_front_cam + "depth/cld", exist_ok=True)
@@ -61,7 +61,7 @@ os.makedirs(dir_lidar, exist_ok=True)
 rospy.init_node('data_retriever', anonymous=True)
 # Initialize sensors
 imu = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=9600)
-camera = ZEDCamera(sl.RESOLUTION.AUTO, 20,
+camera = ZEDCamera(sl.RESOLUTION.HD720, 30,
                    sl.DEPTH_MODE.ULTRA)
 gps_sensor = GPSSensor('/latlon1')
 lidar_sensor = LidarSensor('/velodyne_points')
@@ -132,7 +132,7 @@ def callback(location, lidar_msg):
 
 # ROS message synchronizer
 ts = message_filters.ApproximateTimeSynchronizer(
-    [loc_sub, lidar_sub], 250, 1000000000000000000000)
+    [loc_sub, lidar_sub], 1e3, 1e9)
 ts.registerCallback(callback)
 
 rospy.spin()
