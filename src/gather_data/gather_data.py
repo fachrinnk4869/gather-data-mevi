@@ -1,4 +1,3 @@
-# main.py
 import rospy
 import message_filters
 import yaml
@@ -6,6 +5,7 @@ import cv2
 import pyzed.sl as sl
 import numpy as np
 from sensor_msgs.msg import NavSatFix, PointCloud2
+from std_msgs.msg import String
 from datetime import date
 import os
 import rospkg
@@ -19,7 +19,6 @@ import time
 
 # Create directories for storing data
 rospack = rospkg.RosPack()
-# Replace with your package name
 package_path = rospack.get_path('gather_data')
 
 # Create directories for storing data
@@ -36,11 +35,9 @@ def get_next_dataset_dir():
     # List all directories in the base data directory
     existing_dirs = [d for d in os.listdir(
         base_datadir) if os.path.isdir(os.path.join(base_datadir, d))]
-
     # Filter directories that match the dataset naming convention (e.g., dataset_1, dataset_2, ...)
     dataset_nums = [int(d.split('_')[1]) for d in existing_dirs if d.startswith(
         "dataset_") and d.split('_')[1].isdigit()]
-
     # Get the next dataset number
     next_num = max(dataset_nums, default=0) + 1
     return os.path.join(base_datadir, f"dataset_{next_num}/")
@@ -58,11 +55,12 @@ os.makedirs(dir_meta, exist_ok=True)
 os.makedirs(dir_front_cam + "rgb", exist_ok=True)
 os.makedirs(dir_front_cam + "depth/cld", exist_ok=True)
 os.makedirs(dir_lidar, exist_ok=True)
+
 # ROS initialization
 rospy.init_node('data_retriever', anonymous=True)
+
 # Initialize sensors
 imu = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=9600)
-# camera_rgb_sensor = ZEDCamera('/zed2i/zed_node/left/image_rect_color', '/zed2i/zed_node/depth/depth_registered', '/zed2i/zed_node/pose')
 camera_rgb_sensor = ZEDCameraSubscriber('zed/rgb_image',  '/zed/pose')
 camera_depth_sensor = ZEDDepthGetter()
 gps_sensor = GPSSensor('/latlon1')
@@ -72,11 +70,15 @@ vel_kiri_sensor = LowLevelSensor('/encoder1_value')
 vel_kanan_sensor = LowLevelSensor('/encoder2_value')
 steer_sensor = LowLevelSensor('curra')
 
+# Create a Publisher for the file_name
+file_name_pub = rospy.Publisher('/file_name_depth', String, queue_size=10)
+
 try:
     lidar_sub = lidar_sensor.start_listener()
     loc_sub = gps_sensor.start_listener()
 except rospy.ROSInterruptException:
     rospy.logerr("ROS node interrupted.")
+
 print("--------WAIT CALIB ZEDCAM & WIT (3s)---------")
 time.sleep(3)
 
@@ -89,8 +91,7 @@ def callback(location, lidar_msg):
         rospy.logwarn("Camera frame is missing; skipping this callback")
         return
     translation, orientation = camera_rgb_sensor.get_pose()
-    rospy.loginfo(
-        f"Received data...")
+
     # Get IMU data
     imu_data = imu.get_imu_data()
     throttle = throttle_sensor.get_data()
@@ -98,12 +99,12 @@ def callback(location, lidar_msg):
     vel_kanan = vel_kanan_sensor.get_data()
     steer = steer_sensor.get_data()
 
-    # # Log metadata
-    # sec = str(location.header.stamp.secs).zfill(10)
+    # Log metadata
     sec = str(int(time.time()))
     seq = str(location.header.seq).zfill(10)
     file_name = sec + "_" + seq
 
+    # Create a metadata log
     meta_log = {
         'sec': sec,
         'seq': seq,
@@ -125,21 +126,25 @@ def callback(location, lidar_msg):
         yaml.dump(meta_log, file)
         rospy.loginfo(f"Meta data saved as {file_name}.yml")
 
-    cv2.imwrite(dir_front_cam + "rgb/" + file_name + ".png", rgb_data)
+    # Save RGB and Depth images
     try:
+        cv2.imwrite(dir_front_cam + "rgb/" + file_name + ".png", rgb_data)
         np.save(dir_front_cam + "depth/cld/" + file_name + ".npy", depth_data)
         rospy.loginfo(f"Camera depth data saved as {file_name}.npy")
     except Exception as e:
         rospy.logerr(f"Failed to save camera data: {str(e)}")
+
+    # Save lidar data
     lidar_sensor.save_lidar_data(lidar_msg, dir_lidar + file_name + ".pcd")
-    # rate.sleep()+
-    # time.sleep(0.1)
+
+    # Publish file_name to ROS topic
+    file_name_pub.publish(dir_front_cam + "depth/cld/" + file_name)
+    rospy.loginfo(f"Published file name: {file_name}")
 
 
 # ROS message synchronizer
 ts = message_filters.ApproximateTimeSynchronizer(
-    [loc_sub, lidar_sub], queue_size=500,
-    slop=1e20)
+    [loc_sub, lidar_sub], queue_size=500, slop=1e20)
 ts.registerCallback(callback)
 
 rospy.spin()
