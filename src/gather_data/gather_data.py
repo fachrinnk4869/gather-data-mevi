@@ -86,8 +86,7 @@ time.sleep(3)
 def callback(location, lidar_msg):
     # Get camera data
     rgb_data = camera_rgb_sensor.get_frame()
-    depth_data = camera_depth_sensor.get_depth()
-    if rgb_data is None or depth_data is None:
+    if rgb_data is None:
         rospy.logwarn("Camera frame is missing; skipping this callback")
         return
     translation, orientation = camera_rgb_sensor.get_pose()
@@ -127,9 +126,9 @@ def callback(location, lidar_msg):
         rospy.loginfo(f"Meta data saved as {file_name}.yml")
 
     # Save RGB and Depth images
+    file_name_pub.publish(dir_front_cam + "depth/cld/" + file_name)
     try:
         cv2.imwrite(dir_front_cam + "rgb/" + file_name + ".png", rgb_data)
-        np.save(dir_front_cam + "depth/cld/" + file_name + ".npy", depth_data)
         rospy.loginfo(f"Camera depth data saved as {file_name}.npy")
     except Exception as e:
         rospy.logerr(f"Failed to save camera data: {str(e)}")
@@ -138,7 +137,6 @@ def callback(location, lidar_msg):
     lidar_sensor.save_lidar_data(lidar_msg, dir_lidar + file_name + ".pcd")
 
     # Publish file_name to ROS topic
-    file_name_pub.publish(dir_front_cam + "depth/cld/" + file_name)
     rospy.loginfo(f"Published file name: {file_name}")
 
 

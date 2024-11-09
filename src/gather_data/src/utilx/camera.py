@@ -31,7 +31,7 @@ class ZEDCameraSubscriber:
             return self.rgb_image
         else:
             rospy.logwarn("RGB or Depth image not available yet.")
-            return None, None
+            return None
 
     def rgb_callback(self, rgb_msg):
         # Convert RGB Image message to OpenCV format
