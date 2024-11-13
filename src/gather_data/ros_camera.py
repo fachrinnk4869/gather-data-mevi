@@ -66,7 +66,7 @@ class ZEDCamera:
     def depth_callback(self, msg):
         # Handle the String message and update filename
         self.filename = msg.data
-        rospy.loginfo(f"Received filename: {self.filename}")
+        # rospy.loginfo(f"Received filename: {self.filename}")
 
     def publish_data(self):
         rgb_data, depth_data = self.get_frame()
@@ -78,6 +78,7 @@ class ZEDCamera:
             try:
                 if self.filename is not None:
                     np.save(self.filename + ".npy", depth_data)
+                    cv2.imwrite(self.filename + ".png", depth_data)
                     rospy.loginfo(
                         f"Camera depth data saved as {self.filename}.npy")
             except Exception as e:
@@ -102,7 +103,7 @@ class ZEDCamera:
 if __name__ == "__main__":
     rospy.init_node('zed_camera_node', anonymous=True)
     zed_camera = ZEDCamera(sl.RESOLUTION.VGA, 30, sl.DEPTH_MODE.ULTRA)
-    rate = rospy.Rate(10)  # Set the publishing rate (10 Hz)
+    rate = rospy.Rate(0.1)  # Set the publishing rate (10 Hz)
 
     while not rospy.is_shutdown():
         zed_camera.publish_data()

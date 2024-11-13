@@ -24,7 +24,13 @@ class ZEDCameraSubscriber:
         self.rgb_image = None
         self.pose_position = None
         self.pose_orientation = None
-
+    def get_pose(self):
+        # Retrieve the latest pose data if available
+        if self.pose_position is not None and self.pose_orientation is not None:
+            return self.pose_position, self.pose_orientation
+        else:
+            rospy.logwarn("Pose data not available yet.")
+            return None, None
     def get_frame(self):
         # Retrieve the latest RGB and Depth images if available
         if self.rgb_image is not None:
@@ -46,8 +52,8 @@ class ZEDCameraSubscriber:
         # Store PoseStamped message's position and orientation
         self.pose_position = pose_msg.pose.position
         self.pose_orientation = pose_msg.pose.orientation
-        rospy.loginfo(
-            f"Received Pose: Position={self.pose_position}, Orientation={self.pose_orientation}")
+        # rospy.loginfo(
+        #     f"Received Pose: Position={self.pose_position}, Orientation={self.pose_orientation}")
 
 
 if __name__ == '__main__':

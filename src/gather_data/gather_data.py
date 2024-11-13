@@ -11,7 +11,6 @@ import os
 import rospkg
 from utilx.imu import IMUSensor
 from utilx.camera import ZEDCameraSubscriber
-from ros_camera import ZEDDepthGetter
 from utilx.lidar import LidarSensor
 from utilx.gps import GPSSensor
 from utilx.low_level import LowLevelSensor
@@ -62,7 +61,6 @@ rospy.init_node('data_retriever', anonymous=True)
 # Initialize sensors
 imu = IMUSensor(imu_usb="/dev/ttyUSB0", baudrate=9600)
 camera_rgb_sensor = ZEDCameraSubscriber('zed/rgb_image',  '/zed/pose')
-camera_depth_sensor = ZEDDepthGetter()
 gps_sensor = GPSSensor('/latlon1')
 lidar_sensor = LidarSensor('/velodyne_points')
 throttle_sensor = LowLevelSensor('gas')
