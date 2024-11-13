@@ -74,15 +74,19 @@ steer_sensor = LowLevelSensor('curra')
 try:
     lidar_sub = lidar_sensor.start_listener()
     loc_sub = gps_sensor.start_listener()
+    camera_sub = camera_sensor.start_listener()
 except rospy.ROSInterruptException:
     rospy.logerr("ROS node interrupted.")
 print("--------WAIT CALIB ZEDCAM & WIT (3s)---------")
 time.sleep(3)
 
 rate = rospy.Rate(5)
-def callback(location, lidar_msg):
+
+
+def callback(location, lidar_msg, rgb_data, depth_data, pose_data):
     # Get camera data
-    rgb_data, depth_data = camera_sensor.get_frame()
+    rgb_data, depth_data = camera_sensor.get_frame(
+        rgb_data, depth_data)
     if rgb_data is None or depth_data is None:
         rospy.logwarn("Camera frame is missing; skipping this callback")
         return
@@ -126,18 +130,20 @@ def callback(location, lidar_msg):
     cv2.imwrite(dir_front_cam + "rgb/" + file_name + ".png", rgb_data)
     try:
         np.save(dir_front_cam + "depth/cld/" + file_name + ".npy", depth_data)
-        cv2.imwrite(dir_front_cam + "depth/frame/" + file_name + ".png", depth_data)
+        cv2.imwrite(dir_front_cam + "depth/frame/" +
+                    file_name + ".png", depth_data)
         rospy.loginfo(f"Camera depth data saved as {file_name}.npy")
     except Exception as e:
         rospy.logerr(f"Failed to save camera data: {str(e)}")
     lidar_sensor.save_lidar_data(lidar_msg, dir_lidar + file_name + ".pcd")
-    # rate.sleep()+
-    time.sleep(5)
+    rate.sleep()
+    # time.sleep(0.1)
 
 
 # ROS message synchronizer
 ts = message_filters.ApproximateTimeSynchronizer(
-    [loc_sub, lidar_sub], queue_size=500,
+    [loc_sub, lidar_sub, camera_sub.rgb_sub,
+        camera_sub.depth_sub, camera_sub.pose_sub], queue_size=500,
     slop=1e20)
 ts.registerCallback(callback)
 
