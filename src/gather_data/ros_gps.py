@@ -7,7 +7,7 @@ from sensor_msgs.msg import NavSatFix
 def main():
     rospy.init_node('gps_publisher', anonymous=True)
     gps_pub = rospy.Publisher('/latlon1', NavSatFix, queue_size=10)
-    rate = rospy.Rate(1)  # 10 Hz
+    rate = rospy.Rate(5)  # 10 Hz
 
     # try:
     # s = socket.socket()

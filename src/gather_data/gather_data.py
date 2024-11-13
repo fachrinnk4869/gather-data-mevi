@@ -79,7 +79,7 @@ except rospy.ROSInterruptException:
 print("--------WAIT CALIB ZEDCAM & WIT (3s)---------")
 time.sleep(3)
 
-
+rate = rospy.Rate(5)
 def callback(location, lidar_msg):
     # Get camera data
     rgb_data, depth_data = camera_sensor.get_frame()
@@ -132,7 +132,7 @@ def callback(location, lidar_msg):
         rospy.logerr(f"Failed to save camera data: {str(e)}")
     lidar_sensor.save_lidar_data(lidar_msg, dir_lidar + file_name + ".pcd")
     # rate.sleep()+
-    # time.sleep(0.1)
+    time.sleep(5)
 
 
 # ROS message synchronizer
