@@ -35,11 +35,11 @@ class ZEDCamera:
     def get_frame(self, rgb_msg, depth_msg):
         # Convert the ROS Image messages to OpenCV format
         rgb_image = self.bridge.imgmsg_to_cv2(rgb_msg, "bgr8")
-        depth_image = self.bridge.imgmsg_to_cv2(depth_msg, "32FC1")
+        depth_image = self.bridge.imgmsg_to_cv2(depth_msg, "32FC4")
         return rgb_image, depth_image
 
     def get_pose(self, pose_msg):
-        return pose_msg.translation, pose_msg.orientation
+        return pose_msg.pose.position, pose_msg.pose.orientation
 
     def run(self):
         # Spin to keep the node alive and allow callback processing

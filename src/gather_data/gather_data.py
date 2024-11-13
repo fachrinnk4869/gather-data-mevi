@@ -74,7 +74,7 @@ steer_sensor = LowLevelSensor('curra')
 try:
     lidar_sub = lidar_sensor.start_listener()
     loc_sub = gps_sensor.start_listener()
-    camera_sub = camera_sensor.start_listener()
+    rgb_sub, depth_sub, pose_sub = camera_sensor.start_listener()
 except rospy.ROSInterruptException:
     rospy.logerr("ROS node interrupted.")
 print("--------WAIT CALIB ZEDCAM & WIT (3s)---------")
@@ -90,7 +90,7 @@ def callback(location, lidar_msg, rgb_data, depth_data, pose_data):
     if rgb_data is None or depth_data is None:
         rospy.logwarn("Camera frame is missing; skipping this callback")
         return
-    translation, orientation = camera_sensor.get_pose()
+    translation, orientation = camera_sensor.get_pose(pose_data)
     rospy.loginfo(
         f"Received data...")
     # Get IMU data
@@ -142,8 +142,7 @@ def callback(location, lidar_msg, rgb_data, depth_data, pose_data):
 
 # ROS message synchronizer
 ts = message_filters.ApproximateTimeSynchronizer(
-    [loc_sub, lidar_sub, camera_sub.rgb_sub,
-        camera_sub.depth_sub, camera_sub.pose_sub], queue_size=500,
+    [loc_sub, lidar_sub, rgb_sub, depth_sub, pose_sub], queue_size=500,
     slop=1e20)
 ts.registerCallback(callback)
 
