@@ -56,6 +56,7 @@ dir_lidar = datadir + prefix + "/lidar/"
 os.makedirs(dir_meta, exist_ok=True)
 os.makedirs(dir_front_cam + "rgb", exist_ok=True)
 os.makedirs(dir_front_cam + "depth/cld", exist_ok=True)
+os.makedirs(dir_front_cam + "depth/frame", exist_ok=True)
 os.makedirs(dir_lidar, exist_ok=True)
 # ROS initialization
 rospy.init_node('data_retriever', anonymous=True)
@@ -125,6 +126,7 @@ def callback(location, lidar_msg):
     cv2.imwrite(dir_front_cam + "rgb/" + file_name + ".png", rgb_data)
     try:
         np.save(dir_front_cam + "depth/cld/" + file_name + ".npy", depth_data)
+        cv2.imwrite(dir_front_cam + "depth/frame/" + file_name + ".png", depth_data)
         rospy.loginfo(f"Camera depth data saved as {file_name}.npy")
     except Exception as e:
         rospy.logerr(f"Failed to save camera data: {str(e)}")

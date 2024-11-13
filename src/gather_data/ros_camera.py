@@ -95,7 +95,7 @@ class ZEDCamera:
 if __name__ == "__main__":
     rospy.init_node('zed_camera_node', anonymous=True)
     zed_camera = ZEDCamera(sl.RESOLUTION.VGA, 30, sl.DEPTH_MODE.ULTRA)
-    rate = rospy.Rate(10)  # Set the publishing rate (10 Hz)
+    rate = rospy.Rate(1)  # Set the publishing rate (10 Hz)
 
     while not rospy.is_shutdown():
         zed_camera.publish_data()
