@@ -143,7 +143,7 @@ def callback(location, lidar_msg, rgb_data, depth_data, pose_data):
 # ROS message synchronizer
 ts = message_filters.ApproximateTimeSynchronizer(
     [loc_sub, lidar_sub, rgb_sub, depth_sub, pose_sub], queue_size=500,
-    slop=1e20)
+    slop=1e1)
 ts.registerCallback(callback)
 
 rospy.spin()
