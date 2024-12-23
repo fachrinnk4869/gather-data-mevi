@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
-
 import rospy
-from sensor_msgs.msg import Image, PointCloud2
+from sensor_msgs.msg import Image
 from geometry_msgs.msg import PoseStamped
-from cv_bridge import CvBridge
-import message_filters
 import cv2
+import numpy as np
+from cv_bridge import CvBridge
 
 
 class ZEDCamera:
@@ -21,25 +20,56 @@ class ZEDCamera:
         self.depth_topic = depth_topic
         self.pose_topic = pose_topic
 
-    def start_listener(self):
-        # Create message filters for RGB image, depth image, and pose
-        rgb_sub = message_filters.Subscriber(self.rgb_topic, Image)
-        depth_sub = message_filters.Subscriber(self.depth_topic, Image)
-        pose_sub = message_filters.Subscriber(
-            self.pose_topic, PoseStamped)
+        # Initialize placeholders for RGB, depth, and pose data
+        self.rgb_image = None
+        self.depth_image = None
+        self.pose_position = None
+        self.pose_orientation = None
 
-        rospy.loginfo(
-            f"Subscribed to {self.rgb_topic}, {self.depth_topic}, and {self.pose_topic} topics. Waiting for data...")
-        return rgb_sub, depth_sub, pose_sub
+        # Set up subscribers with individual callbacks
+        rospy.Subscriber(self.rgb_topic, Image, self.rgb_callback)
+        rospy.Subscriber(self.depth_topic, Image,
+                         self.depth_callback)
+        rospy.Subscriber(self.pose_topic, PoseStamped, self.pose_callback)
 
-    def get_frame(self, rgb_msg, depth_msg):
-        # Convert the ROS Image messages to OpenCV format
-        rgb_image = self.bridge.imgmsg_to_cv2(rgb_msg, "bgr8")
-        depth_image = self.bridge.imgmsg_to_cv2(depth_msg, "32FC4")
-        return rgb_image, depth_image
+    def rgb_callback(self, rgb_msg):
+        # Convert RGB Image message to OpenCV format and store it
+        try:
+            self.rgb_image = self.bridge.imgmsg_to_cv2(rgb_msg, "bgr8")
+            # rospy.loginfo("Received RGB image data.")
+        except Exception as e:
+            rospy.logerr(f"Failed to process RGB image: {e}")
 
-    def get_pose(self, pose_msg):
-        return pose_msg.pose.position, pose_msg.pose.orientation
+    def depth_callback(self, depth_msg):
+        # Convert Depth Image message to OpenCV format and store it
+        try:
+            self.depth_image = self.bridge.imgmsg_to_cv2(depth_msg, "32FC4")
+            # np.save("./unittest/depth_camera.npy", self.depth_image)
+            # rospy.loginfo("Received Depth image data.")
+        except Exception as e:
+            rospy.logerr(f"Failed to process Depth image: {e}")
+
+    def pose_callback(self, pose_msg):
+        # Store PoseStamped message's position and orientation
+        self.pose_position = pose_msg.pose.position
+        self.pose_orientation = pose_msg.pose.orientation
+        # rospy.loginfo("Received Pose data.")
+
+    def get_frame(self):
+        # Retrieve the latest RGB and Depth images if available
+        if self.rgb_image is not None and self.depth_image is not None:
+            return self.rgb_image, self.depth_image
+        else:
+            rospy.logwarn("RGB or Depth image not available yet.")
+            return None, None
+
+    def get_pose(self):
+        # Retrieve the latest pose data if available
+        if self.pose_position is not None and self.pose_orientation is not None:
+            return self.pose_position, self.pose_orientation
+        else:
+            rospy.logwarn("Pose data not available yet.")
+            return None, None
 
     def run(self):
         # Spin to keep the node alive and allow callback processing
