@@ -70,6 +70,7 @@ Jika masih ada error saat menjalankan launch, lakukan debugging dengan cara beri
    ```
    (Port tergantung pada port low-level yang disambungkan.)
    - pastikan sudah masuk terlebih dulu ke terminal docker
+4. Jika tidak bisa dijalankan, ganti slop pada `gather_data.py` menjadi sebesar mungkin contoh `1e20`
 ### Keterangan Tambahan
 
 - IMU menggunakan port: `/dev/ttyUSB0`
