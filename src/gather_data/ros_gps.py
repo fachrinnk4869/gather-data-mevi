@@ -7,26 +7,23 @@ from sensor_msgs.msg import NavSatFix
 def main():
     rospy.init_node('gps_publisher', anonymous=True)
     gps_pub = rospy.Publisher('/latlon1', NavSatFix, queue_size=10)
-    rate = rospy.Rate(10)  # 10 Hz
+    rate = rospy.Rate(5)  # 10 Hz
 
-    # try:
     s = socket.socket()
     s.settimeout(5)   # 5 seconds
     try:
         port = 9000
-        ip_address_emlid_rover = '192.168.1.114' #'192.168.118.113'#
+        ip_address_emlid_rover = '192.168.1.102' #'192.168.1.114'#
         s.connect((ip_address_emlid_rover, port))
     except socket.error as exc:
         print ("Caught exception socket.error : %s" % exc)
-    # print("succesfull conected")
-    # except Exception as e:
-        # print("failed to connect:", e)
 
     while not rospy.is_shutdown():
         data = s.recv(1024)
         if len(data) < 54:  # Check if data length is sufficient
             continue
         try:
+            #print(data)
             lat = float(data[26:39])
             lon = float(data[40:54])
         except ValueError:
@@ -39,7 +36,7 @@ def main():
         # lon = -122.4194  # Example longitude
         msg.latitude = lat
         msg.longitude = lon
-        # rospy.loginfo("latitude: %f | longitude: %f" % (lat, lon))
+        # rospy.loginfo("la titude: %f | longitude: %f" % (lat, lon))
         gps_pub.publish(msg)
         rate.sleep()    
 

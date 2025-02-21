@@ -2,6 +2,7 @@ import pyzed.sl as sl
 import numpy as np
 import cv2
 import rospy
+from std_msgs.msg import Float32MultiArray
 from sensor_msgs.msg import Image
 from geometry_msgs.msg import PoseStamped
 from cv_bridge import CvBridge
@@ -46,10 +47,11 @@ class ZEDCamera:
         depth_map = sl.Mat(self.frame_size[0], self.frame_size[1])
 
         if self.zed.grab(self.runtime_params) == sl.ERROR_CODE.SUCCESS:
-            self.zed.retrieve_image(rgb_image, sl.VIEW.LEFT)
-            self.zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)
+            self.zed.retrieve_image(rgb_image, sl.VIEW.LEFT, sl.MEM.CPU)
+            self.zed.retrieve_measure(depth_map, sl.MEASURE.XYZ, sl.MEM.CPU)
             rgb_data = rgb_image.get_data()[:, :, :3]
             depth_data = depth_map.get_data()
+            # print(depth_data.shape)
             return rgb_data, depth_data
         return None, None
 
@@ -69,8 +71,9 @@ class ZEDCamera:
             self.rgb_pub.publish(rgb_msg)
 
             # Publish depth map (convert depth to uint8 for visualization, if needed)
-            depth_msg = self.bridge.cv2_to_imgmsg(depth_data, encoding="32FC1")
+            depth_msg = self.bridge.cv2_to_imgmsg(depth_data, encoding="32FC4")
             self.depth_pub.publish(depth_msg)
+            
 
         # Publish Pose data
         translation, orientation = self.get_pose()
@@ -91,8 +94,8 @@ class ZEDCamera:
 # Main loop to publish data
 if __name__ == "__main__":
     rospy.init_node('zed_camera_node', anonymous=True)
-    zed_camera = ZEDCamera(sl.RESOLUTION.VGA, 30, sl.DEPTH_MODE.ULTRA)
-    rate = rospy.Rate(10)  # Set the publishing rate (10 Hz)
+    zed_camera = ZEDCamera(sl.RESOLUTION.VGA, 15, sl.DEPTH_MODE.PERFORMANCE)
+    rate = rospy.Rate(5)  # Set the publishing rate (10 Hz)
 
     while not rospy.is_shutdown():
         zed_camera.publish_data()
